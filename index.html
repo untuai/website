@@ -3,1497 +3,1435 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UNTU AI — Hotel Service Robots</title>
-  <meta name="description" content="Untu AI develops cutting-edge service robots for the hospitality industry. Automate room service, enhance guest experiences, and drive operational efficiency.">
+  <title>Untu AI — Hotel Service Robots</title>
+  <meta name="description" content="Untu AI builds autonomous service robots for hotels. Automate room delivery, enhance guest experience, operate 24/7.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,200;0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ─── TOKENS ─────────────────────────────────────────────── */
-    :root {
-      --dark:        #252527;
-      --dark-2:      #1a1a1c;
-      --dark-3:      #111113;
-      --dark-card:   #2e2e31;
-      --gold:        #C5950F;
-      --yellow:      #F9CB38;
-      --yellow-pale: #FFFDE5;
-      --muted:       #DBCA95;
-      --grey:        #71717a;
-      --grey-lt:     #a1a1aa;
-      --border:      rgba(249,203,56,0.2);
-      --border-str:  rgba(249,203,56,0.55);
-      --transition:  0.3s cubic-bezier(.4,0,.2,1);
-    }
-
-    /* ─── RESET ──────────────────────────────────────────────── */
+    /* ─── RESET & BASE ──────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    :root {
+      --black:   #000000;
+      --off-black: #0a0a0a;
+      --dark:    #111111;
+      --dark-2:  #1a1a1a;
+      --border:  rgba(255,255,255,0.08);
+      --border-md: rgba(255,255,255,0.14);
+      --white:   #ffffff;
+      --off-white: #f0ede8;
+      --dim:     rgba(255,255,255,0.45);
+      --dimmer:  rgba(255,255,255,0.28);
+      --gold:    #c8a84b;
+      --gold-lt: #e8c96a;
+      --nav-h:   72px;
+    }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: var(--dark-3);
-      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ─── TYPOGRAPHY HELPERS ─────────────────────────────────── */
-    .orb { font-family: 'Orbitron', monospace; }
-    .serif { font-family: 'Crimson Pro', Georgia, serif; }
-
-    .eyebrow {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
 
     /* ─── SCROLLBAR ──────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--dark-3); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+    /* ─── UTILITIES ──────────────────────────────────────────── */
+    .label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+    @media (max-width: 768px) { .container { padding: 0 24px; } }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────────────── */
+    .sr {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .sr.up { transform: translateY(40px); }
+    .sr.left { transform: translateX(-40px); }
+    .sr.right { transform: translateX(40px); }
+    .sr.visible { opacity: 1; transform: translate(0,0); }
+    .sr-d1 { transition-delay: 0.1s; }
+    .sr-d2 { transition-delay: 0.2s; }
+    .sr-d3 { transition-delay: 0.3s; }
+    .sr-d4 { transition-delay: 0.4s; }
+    .sr-d5 { transition-delay: 0.5s; }
 
     /* ═══════════════════════════════════════════════════════════
-       NAVBAR
+       NAV
     ═══════════════════════════════════════════════════════════ */
-    #navbar {
+    nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 1000;
-      background: rgba(17,17,19,0.85);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(197,149,15,0.12);
-      transition: background var(--transition), border-color var(--transition);
+      z-index: 100;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      transition: background 0.5s ease, border-color 0.5s ease;
+      border-bottom: 1px solid transparent;
     }
-    #navbar.scrolled {
-      background: rgba(10,10,11,0.97);
-      border-color: rgba(197,149,15,0.25);
+    nav.filled {
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-color: var(--border);
     }
     .nav-inner {
-      max-width: 1280px;
+      width: 100%;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 40px;
-      height: 68px;
+      padding: 0 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .nav-logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 20px;
-      letter-spacing: 0.08em;
-      color: var(--yellow);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.06em;
+      color: var(--white);
     }
-    .nav-logo::before {
-      content: '';
-      width: 6px;
-      height: 30px;
-      background: linear-gradient(180deg, var(--yellow) 0%, var(--gold) 100%);
-      display: block;
-    }
+    .nav-logo span { color: var(--gold); }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 36px;
+      gap: 40px;
       list-style: none;
     }
     .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--dim);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-btn {
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--grey-lt);
+      color: var(--black);
+      background: var(--white);
+      padding: 10px 24px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
       text-decoration: none;
-      position: relative;
-      transition: color var(--transition);
     }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0; right: 0;
-      height: 1px;
-      background: var(--yellow);
-      transform: scaleX(0);
-      transition: transform var(--transition);
-    }
-    .nav-links a:hover { color: var(--yellow-pale); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-cta {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--dark-3) !important;
-      background: var(--yellow);
-      padding: 9px 20px;
-      text-decoration: none;
-      transition: background var(--transition), transform var(--transition);
-    }
-    .nav-cta:hover { background: var(--yellow-pale); transform: translateY(-1px); }
-    .nav-cta::after { display: none !important; }
+    .nav-btn:hover { background: var(--off-white); transform: translateY(-1px); }
 
     /* hamburger */
-    .nav-hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-      background: none;
-      border: none;
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: transform 0.3s, opacity 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    @media (max-width: 860px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: var(--nav-h); left: 0; right: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(0,0,0,0.97);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 48px 28px;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: 14px 0; font-size: 15px; border-bottom: 1px solid var(--border); }
+      .nav-links li:last-child a { border-bottom: none; }
+      .nav-inner { padding: 0 24px; }
     }
-    .nav-hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--yellow);
-      transition: transform 0.3s, opacity 0.3s;
-    }
-    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
-    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ═══════════════════════════════════════════════════════════
-       HERO
+       HERO — cinematic full-viewport
     ═══════════════════════════════════════════════════════════ */
     #hero {
-      min-height: 100vh;
-      background: var(--dark-3);
       position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
       overflow: hidden;
+      background: var(--black);
+    }
+
+    /* full-bleed robot image background */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      /* placeholder — when real image added: background: url('images/hero.jpg') center/cover no-repeat; */
+      background: var(--black);
       display: flex;
       align-items: center;
-      padding-top: 68px;
+      justify-content: center;
     }
-
-    /* diagonal slash decoration */
-    #hero::before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 220px;
-      background: linear-gradient(135deg, transparent 45%, rgba(197,149,15,0.07) 45%, rgba(197,149,15,0.07) 55%, transparent 55%);
-      top: 32%;
-      left: -50%;
-      transform: rotate(-8deg);
-      pointer-events: none;
-    }
-    #hero::after {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 60px;
-      background: linear-gradient(135deg, transparent 45%, rgba(249,203,56,0.12) 45%, rgba(249,203,56,0.12) 55%, transparent 55%);
-      top: 41%;
-      left: -50%;
-      transform: rotate(-8deg);
-      pointer-events: none;
-    }
-
-    /* corner grid decoration */
-    .hero-grid-bg {
-      position: absolute;
-      top: 0; right: 0;
-      width: 60%;
+    .hero-bg-placeholder {
+      width: 100%;
       height: 100%;
-      background-image:
-        linear-gradient(rgba(197,149,15,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(197,149,15,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.4) 0%, transparent 100%);
-      mask-image: linear-gradient(to left, rgba(0,0,0,0.4) 0%, transparent 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8vw;
+    }
+    /* large robot silhouette placeholder */
+    .robot-silhouette {
+      width: min(420px, 42vw);
+      height: min(640px, 80vh);
+      border: 1px solid rgba(200,168,75,0.2);
+      background: linear-gradient(160deg, #141414 0%, #0d0d0d 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .robot-silhouette::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(200,168,75,0.06) 0%, transparent 65%);
+    }
+    .robot-silhouette .rs-icon {
+      font-size: 100px;
+      line-height: 1;
+      filter: opacity(0.35);
+      position: relative;
+    }
+    .robot-silhouette .rs-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: rgba(200,168,75,0.4);
+      position: relative;
+    }
+    /* scan-line animation on placeholder */
+    .robot-silhouette::after {
+      content: '';
+      position: absolute;
+      top: -2px; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,168,75,0.6), transparent);
+      animation: scan 3.5s ease-in-out infinite;
+    }
+    @keyframes scan {
+      0%   { top: 10%; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { top: 90%; opacity: 0; }
     }
 
-    .hero-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 80px 40px;
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 80px;
-      align-items: center;
+    /* gradient overlays */
+    .hero-overlay-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 65%;
+      background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 40%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero-overlay-left {
+      position: absolute;
+      top: 0; left: 0;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* hero content */
+    .hero-content {
       position: relative;
       z-index: 2;
-      width: 100%;
+      padding: 0 48px 80px;
+      max-width: 760px;
     }
-
-    .hero-content { }
-
-    .hero-eyebrow {
-      display: flex;
+    .hero-tag {
+      display: inline-flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       margin-bottom: 28px;
       opacity: 0;
-      animation: fadeSlideUp 0.8s 0.1s forwards;
+      animation: fadeUp 1s 0.2s forwards;
     }
-    .hero-eyebrow span { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); }
-    .hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
-
-    .hero-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(30px, 4vw, 58px);
-      font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
-      color: var(--yellow-pale);
+    .hero-tag::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--gold);
+    }
+    .hero-tag span {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeSlideUp 0.8s 0.25s forwards;
+      color: var(--gold);
     }
-    .hero-title em {
+    .hero-h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(40px, 5.5vw, 82px);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 1s 0.35s forwards;
+    }
+    .hero-h1 em {
       font-style: normal;
-      color: var(--yellow);
-      display: block;
+      color: var(--gold);
     }
-
     .hero-sub {
-      font-family: 'Crimson Pro', serif;
-      font-size: 22px;
+      font-size: clamp(16px, 1.6vw, 19px);
       font-weight: 300;
-      color: var(--grey-lt);
-      line-height: 1.6;
-      margin-bottom: 40px;
-      max-width: 480px;
+      line-height: 1.65;
+      color: var(--dim);
+      margin-bottom: 44px;
+      max-width: 500px;
       opacity: 0;
-      animation: fadeSlideUp 0.8s 0.4s forwards;
+      animation: fadeUp 1s 0.5s forwards;
     }
-
     .hero-actions {
       display: flex;
       align-items: center;
       gap: 20px;
       flex-wrap: wrap;
       opacity: 0;
-      animation: fadeSlideUp 0.8s 0.55s forwards;
+      animation: fadeUp 1s 0.65s forwards;
     }
-
-    .btn-primary {
+    .btn-white {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.22em;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--dark-3);
-      background: var(--yellow);
-      padding: 16px 32px;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      transition: transform var(--transition), box-shadow var(--transition);
+      color: var(--black);
+      background: var(--white);
+      padding: 15px 36px;
+      border: 1px solid var(--white);
+      transition: background 0.25s, color 0.25s, transform 0.25s;
     }
-    .btn-primary::before {
-      content: '';
+    .btn-white:hover { background: transparent; color: var(--white); transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--white); }
+
+    /* hero scroll indicator */
+    .hero-scroll {
       position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: var(--yellow-pale);
-      transition: left 0.35s ease;
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(249,203,56,0.25); }
-    .btn-primary:hover::before { left: 0; }
-    .btn-primary span { position: relative; z-index: 1; }
-    .btn-primary .arrow { position: relative; z-index: 1; font-size: 16px; }
-
-    .btn-outline {
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--border-str);
-      padding: 15px 28px;
-      text-decoration: none;
-      transition: color var(--transition), border-color var(--transition), background var(--transition);
-    }
-    .btn-outline:hover { color: var(--yellow); border-color: var(--yellow); background: rgba(249,203,56,0.04); }
-
-    /* robot placeholder */
-    .hero-robot-wrap {
-      opacity: 0;
-      animation: fadeSlideIn 1s 0.5s forwards;
-      position: relative;
-    }
-    .hero-robot-placeholder {
-      width: 100%;
-      aspect-ratio: 9/14;
-      background: var(--dark-card);
-      border: 1.5px solid var(--border-str);
+      bottom: 32px; right: 48px;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      position: relative;
-      overflow: hidden;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeIn 1s 1.2s forwards;
     }
-    .hero-robot-placeholder::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(197,149,15,0.06) 0%, transparent 60%);
-    }
-    .hero-robot-placeholder .robot-icon {
-      font-size: 72px;
-      line-height: 1;
-      filter: grayscale(0.3) opacity(0.55);
-    }
-    .hero-robot-placeholder .robot-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--grey);
-    }
-    /* corner markers */
-    .hero-robot-placeholder::after {
-      content: '';
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 20px; height: 20px;
-      border-top: 2px solid var(--yellow);
-      border-right: 2px solid var(--yellow);
-    }
-    .corner-bl {
-      position: absolute;
-      bottom: 12px; left: 12px;
-      width: 20px; height: 20px;
-      border-bottom: 2px solid var(--yellow);
-      border-left: 2px solid var(--yellow);
-      pointer-events: none;
-    }
-    .robot-badge {
-      position: absolute;
-      bottom: -1px; right: -1px;
-      background: var(--gold);
-      padding: 8px 18px;
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dark-3);
-    }
-
-    /* ═══════════════════════════════════════════════════════════
-       STATS BAR
-    ═══════════════════════════════════════════════════════════ */
-    #stats {
-      background: var(--dark-2);
-      border-top: 1px solid rgba(197,149,15,0.15);
-      border-bottom: 1px solid rgba(197,149,15,0.15);
-      position: relative;
-      overflow: hidden;
-    }
-    #stats::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent 0%, var(--yellow) 20%, var(--gold) 60%, transparent 100%);
-    }
-    .stats-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 40px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .stat-item {
-      padding: 40px 20px;
-      text-align: center;
-      border-right: 1px solid rgba(197,149,15,0.12);
-      position: relative;
-      transition: background var(--transition);
-    }
-    .stat-item:last-child { border-right: none; }
-    .stat-item:hover { background: rgba(197,149,15,0.04); }
-    .stat-num {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(28px, 3vw, 42px);
-      font-weight: 900;
-      color: var(--yellow);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-label {
-      font-size: 11px;
+    .hero-scroll span {
+      font-size: 10px;
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--grey);
+      color: var(--dimmer);
+      writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--dimmer), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(0.6); transform-origin: top; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-content { padding: 0 24px 64px; }
+      .robot-silhouette { width: min(260px, 60vw); height: min(400px, 50vh); }
+      .hero-bg-placeholder { padding-right: 0; justify-content: center; }
+      .hero-scroll { right: 24px; }
     }
 
     /* ═══════════════════════════════════════════════════════════
-       SECTION WRAPPER
+       STATS TICKER
     ═══════════════════════════════════════════════════════════ */
-    .section {
-      padding: 100px 40px;
-      max-width: 1280px;
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--off-black);
+    }
+    .stats-inner {
+      max-width: 1200px;
       margin: 0 auto;
+      padding: 0 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
     }
-    .section-full {
-      padding: 100px 0;
+    .stat-cell {
+      padding: 40px 0;
+      border-right: 1px solid var(--border);
+      padding-left: 32px;
+      transition: background 0.3s;
     }
-    .section-full .section { padding-left: 40px; padding-right: 40px; padding-top: 0; padding-bottom: 0; }
-
-    .section-header {
-      margin-bottom: 60px;
+    .stat-cell:first-child { padding-left: 0; border-left: none; }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell:hover { background: rgba(255,255,255,0.02); }
+    .stat-n {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 8px;
     }
-    .section-header h2 {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(26px, 3vw, 44px);
-      font-weight: 900;
+    .stat-n span { color: var(--gold); }
+    .stat-l {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--dimmer);
       text-transform: uppercase;
+    }
+    @media (max-width: 768px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); padding: 0 24px; }
+      .stat-cell { padding-left: 16px; }
+      .stat-cell:nth-child(2) { border-right: none; }
+      .stat-cell:nth-child(3) { border-left: none; padding-left: 0; border-right: 1px solid var(--border); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       INTRO / MANIFESTO SECTION
+    ═══════════════════════════════════════════════════════════ */
+    #intro {
+      padding: 140px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .intro-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 100px;
+      align-items: center;
+    }
+    .intro-left .label { margin-bottom: 20px; }
+    .intro-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 700;
+      line-height: 1.15;
       letter-spacing: -0.02em;
-      color: var(--yellow-pale);
-      line-height: 1.1;
-      margin-top: 12px;
+      color: var(--white);
     }
-    .section-header h2 em {
-      font-style: normal;
-      color: var(--yellow);
-    }
-    .section-header p {
-      margin-top: 14px;
-      font-family: 'Crimson Pro', serif;
-      font-size: 18px;
+    .intro-right p {
+      font-size: clamp(17px, 1.6vw, 20px);
       font-weight: 300;
-      color: var(--grey-lt);
-      max-width: 520px;
-      line-height: 1.7;
+      line-height: 1.75;
+      color: var(--dim);
+      margin-bottom: 24px;
+    }
+    .intro-right p:last-child { margin-bottom: 0; }
+    @media (max-width: 900px) {
+      .intro-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; }
+      #intro { padding: 80px 0; }
     }
 
     /* ═══════════════════════════════════════════════════════════
        PRODUCT SECTION
     ═══════════════════════════════════════════════════════════ */
-    #products-bg { background: var(--dark); }
+    #product {
+      padding: 140px 0;
+      background: var(--off-black);
+      border-bottom: 1px solid var(--border);
+    }
+    .product-header {
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      padding: 0 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .product-header-left .label { margin-bottom: 16px; }
+    .product-header-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      color: var(--white);
+    }
+    .product-header-right {
+      max-width: 340px;
+      flex-shrink: 0;
+    }
+    .product-header-right p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--dim);
+    }
 
-    .product-grid {
+    /* product layout */
+    .product-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
       display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 72px;
-      align-items: start;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
     }
 
-    .product-image-col {
-      position: sticky;
-      top: 100px;
+    /* left — big image */
+    .product-img-col {
+      position: relative;
+      border-right: 1px solid var(--border);
+      min-height: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dark);
+      overflow: hidden;
     }
-
-    .product-placeholder {
-      width: 100%;
-      aspect-ratio: 2/3;
-      background: var(--dark-card);
-      border: 1.5px solid var(--border-str);
+    .product-img-col::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 40% 35%, rgba(200,168,75,0.07) 0%, transparent 60%);
+    }
+    .product-img-placeholder {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-    .product-placeholder::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 20%, rgba(197,149,15,0.08) 0%, transparent 60%);
-    }
-    .product-placeholder .p-icon { font-size: 80px; filter: opacity(0.5); position: relative; z-index: 1; }
-    .product-placeholder .p-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 600;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--grey);
-      position: relative;
+      gap: 16px;
       z-index: 1;
+      position: relative;
     }
-    .product-placeholder .corner-tr {
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 22px; height: 22px;
-      border-top: 2px solid var(--gold);
-      border-right: 2px solid var(--gold);
+    .product-img-placeholder .pi-icon { font-size: 120px; filter: opacity(0.25); }
+    .product-img-placeholder .pi-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(200,168,75,0.35);
     }
-    .product-placeholder .corner-bl {
+    /* scan line on product image */
+    .product-img-col .scan-line {
       position: absolute;
-      bottom: 12px; left: 12px;
-      width: 22px; height: 22px;
-      border-bottom: 2px solid var(--gold);
-      border-left: 2px solid var(--gold);
-    }
-    .product-code-badge {
-      position: absolute;
-      top: 0; left: 0;
-      background: var(--dark-3);
-      border-right: 1px solid var(--border-str);
-      border-bottom: 1px solid var(--border-str);
-      padding: 6px 14px;
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      color: var(--gold);
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,168,75,0.5), transparent);
+      animation: scan 4s ease-in-out infinite 1s;
     }
 
-    .product-info-col {}
-    .product-meta {
-      margin-bottom: 32px;
-      padding-bottom: 32px;
-      border-bottom: 1px solid rgba(197,149,15,0.12);
+    /* product code badge */
+    .product-sku {
+      position: absolute;
+      bottom: 0; left: 0;
+      padding: 10px 20px;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      background: var(--off-black);
+    }
+    .product-sku span {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+    }
+
+    /* right — specs */
+    .product-info-col {
+      padding: 56px 56px 56px;
+    }
+    .product-name-row {
+      margin-bottom: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
     }
     .product-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 30px;
-      font-weight: 900;
-      color: var(--yellow-pale);
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      margin-bottom: 6px;
-    }
-    .product-code {
-      font-size: 12px;
-      letter-spacing: 0.2em;
-      color: var(--grey);
-      text-transform: uppercase;
-    }
-    .product-desc {
-      font-family: 'Crimson Pro', serif;
-      font-size: 17px;
-      font-weight: 300;
-      color: var(--grey-lt);
-      line-height: 1.75;
-      margin-top: 16px;
-    }
-
-    /* specs table */
-    .specs-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 14px;
-    }
-    .specs-table {
-      width: 100%;
-      border-collapse: collapse;
-      border: 1.5px solid rgba(249,203,56,0.3);
-      margin-bottom: 36px;
-    }
-    .specs-table thead tr {
-      background: rgba(249,203,56,0.12);
-    }
-    .specs-table thead th {
-      padding: 10px 16px;
-      text-align: left;
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
       font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .product-subtitle { font-size: 13px; color: var(--dimmer); letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* specs */
+    .specs-group { margin-bottom: 36px; }
+    .specs-group-label {
+      font-size: 10px;
+      font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--yellow);
-    }
-    .specs-table tbody tr {
-      border-bottom: 1px solid rgba(249,203,56,0.12);
-      transition: background var(--transition);
-    }
-    .specs-table tbody tr:hover { background: rgba(197,149,15,0.06); }
-    .specs-table tbody td {
-      padding: 10px 16px;
-      font-size: 13px;
-    }
-    .specs-table .td-param { font-weight: 600; color: var(--yellow-pale); }
-    .specs-table .td-val { color: var(--grey-lt); }
-
-    /* feature list */
-    .features-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
+      color: var(--dimmer);
       margin-bottom: 16px;
     }
-    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .feature-item {
+    .spec-row {
       display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 14px 18px;
-      background: var(--dark-card);
-      border-left: 3px solid var(--yellow);
-      transition: border-color var(--transition), background var(--transition);
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .feature-item:hover { border-color: var(--gold); background: rgba(197,149,15,0.06); }
-    .feature-arrow { color: var(--yellow); font-size: 14px; margin-top: 1px; flex-shrink: 0; }
-    .feature-text { font-size: 13px; font-weight: 500; color: var(--grey-lt); line-height: 1.5; }
+    .spec-row:first-of-type { border-top: 1px solid var(--border); }
+    .spec-key { font-size: 13px; font-weight: 400; color: var(--dimmer); }
+    .spec-val { font-size: 13px; font-weight: 500; color: var(--white); text-align: right; }
+
+    /* features */
+    .features-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 36px; }
+    .feat-item { display: flex; align-items: flex-start; gap: 16px; }
+    .feat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      min-width: 24px;
+      padding-top: 2px;
+    }
+    .feat-text { font-size: 14px; font-weight: 300; color: var(--dim); line-height: 1.6; }
+
+    @media (max-width: 900px) {
+      .product-body { grid-template-columns: 1fr; }
+      .product-img-col { min-height: 360px; border-right: none; border-bottom: 1px solid var(--border); }
+      .product-info-col { padding: 36px 24px; }
+      .product-header { flex-direction: column; align-items: flex-start; padding: 0 24px; }
+      .product-header-right { max-width: 100%; }
+      #product { padding: 80px 0; }
+    }
 
     /* ═══════════════════════════════════════════════════════════
-       SERVICES SECTION
+       SERVICES
     ═══════════════════════════════════════════════════════════ */
-    #services-bg { background: var(--dark-3); }
-
+    #services {
+      padding: 140px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .services-header {
+      max-width: 1200px;
+      margin: 0 auto 72px;
+      padding: 0 48px;
+    }
+    .services-header .label { margin-bottom: 16px; }
+    .services-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      max-width: 520px;
+    }
     .services-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
     }
-
-    .service-card {
-      background: var(--dark-card);
-      padding: 40px 32px;
-      border-top: 3px solid var(--border-str);
+    .svc-card {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 40px;
       position: relative;
       overflow: hidden;
-      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
-      cursor: default;
+      transition: background 0.35s;
     }
-    .service-card::before {
+    .svc-card::after {
       content: '';
       position: absolute;
-      bottom: 0; right: 0;
-      width: 80px; height: 80px;
-      background: radial-gradient(circle, rgba(197,149,15,0.08) 0%, transparent 70%);
-      transition: transform 0.5s ease, opacity 0.5s;
-      transform: translate(40%, 40%);
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
     }
-    .service-card:hover {
-      border-color: var(--yellow);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(249,203,56,0.1);
+    .svc-card:hover { background: rgba(255,255,255,0.02); }
+    .svc-card:hover::after { transform: scaleX(1); }
+    .svc-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-bottom: 32px;
     }
-    .service-card:hover::before { transform: translate(0,0); }
-    .service-icon { font-size: 36px; margin-bottom: 20px; display: block; }
-    .service-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 13px;
+    .svc-icon { font-size: 32px; margin-bottom: 20px; display: block; line-height: 1; }
+    .svc-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--yellow-pale);
+      color: var(--white);
       margin-bottom: 14px;
+      letter-spacing: -0.01em;
     }
-    .service-desc { font-size: 13px; color: var(--grey-lt); line-height: 1.7; }
+    .svc-desc { font-size: 14px; font-weight: 300; color: var(--dim); line-height: 1.7; }
+    @media (max-width: 860px) {
+      .services-grid { grid-template-columns: 1fr; padding: 0 24px; }
+      .services-header { padding: 0 24px; }
+      #services { padding: 80px 0; }
+    }
 
     /* ═══════════════════════════════════════════════════════════
-       ABOUT SECTION
+       ABOUT / TEAM
     ═══════════════════════════════════════════════════════════ */
-    #about-bg { background: var(--dark-2); border-top: 1px solid rgba(197,149,15,0.1); border-bottom: 1px solid rgba(197,149,15,0.1); }
-
-    .mission-block {
-      background: var(--dark-3);
-      border-left: 4px solid var(--yellow);
-      padding: 28px 32px;
-      margin-bottom: 60px;
-      position: relative;
+    #about {
+      padding: 140px 0;
+      background: var(--off-black);
+      border-bottom: 1px solid var(--border);
     }
-    .mission-block::before {
-      content: '"';
-      position: absolute;
-      top: -10px; left: 20px;
-      font-family: 'Crimson Pro', serif;
-      font-size: 80px;
-      color: rgba(249,203,56,0.12);
-      line-height: 1;
+    .about-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
     }
-    .mission-text {
-      font-family: 'Crimson Pro', serif;
-      font-size: 20px;
-      font-weight: 400;
+    .about-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      margin-bottom: 100px;
+      padding-bottom: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .about-top-left .label { margin-bottom: 16px; }
+    .about-top-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+    .about-top-right { display: flex; flex-direction: column; justify-content: center; }
+    .about-mission {
+      font-size: clamp(17px, 1.6vw, 21px);
+      font-weight: 300;
       font-style: italic;
-      color: var(--yellow-pale);
-      line-height: 1.65;
-      position: relative;
+      line-height: 1.7;
+      color: var(--dim);
+      border-left: 2px solid var(--gold);
+      padding-left: 28px;
     }
 
+    /* team */
+    .team-label { margin-bottom: 40px; }
     .team-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
     }
-
     .team-card {
-      background: var(--dark-card);
-      border: 1.5px solid rgba(197,149,15,0.1);
-      border-top: 3px solid var(--yellow);
-      padding: 32px 24px;
-      text-align: center;
-      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 44px 36px;
+      transition: background 0.3s;
     }
-    .team-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-      border-color: rgba(249,203,56,0.4);
-    }
-    .avatar-placeholder {
-      width: 80px;
-      height: 80px;
+    .team-card:hover { background: rgba(255,255,255,0.02); }
+    .avatar {
+      width: 72px; height: 72px;
       border-radius: 50%;
-      background: var(--dark-3);
-      border: 2px solid var(--border-str);
-      margin: 0 auto 16px;
+      background: var(--dark-2);
+      border: 1px solid var(--border-md);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 28px;
-      color: var(--grey);
-      transition: border-color var(--transition);
+      margin-bottom: 24px;
+      transition: border-color 0.3s;
     }
-    .team-card:hover .avatar-placeholder { border-color: var(--yellow); }
+    .team-card:hover .avatar { border-color: rgba(200,168,75,0.4); }
     .team-name {
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--yellow-pale);
-      margin-bottom: 4px;
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 5px;
     }
     .team-role {
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
-    .team-bio { font-size: 12px; color: var(--grey-lt); line-height: 1.65; }
+    .team-bio { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.65; }
+
+    @media (max-width: 900px) {
+      .about-top { grid-template-columns: 1fr; gap: 40px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .about-inner { padding: 0 24px; }
+      #about { padding: 80px 0; }
+    }
 
     /* ═══════════════════════════════════════════════════════════
        TESTIMONIALS
     ═══════════════════════════════════════════════════════════ */
-    #testimonials-bg { background: var(--dark); }
-
+    #testimonials {
+      padding: 140px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .testi-header {
+      max-width: 1200px;
+      margin: 0 auto 72px;
+      padding: 0 48px;
+    }
+    .testi-header .label { margin-bottom: 16px; }
+    .testi-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
     .testi-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
     }
-
     .testi-card {
-      background: var(--dark-card);
-      border-left: 3px solid var(--border-str);
-      padding: 28px 26px;
-      position: relative;
-      transition: border-color var(--transition), transform var(--transition);
+      background: var(--black);
+      padding: 48px 40px;
+      transition: background 0.3s;
     }
-    .testi-card:hover { border-color: var(--yellow); transform: translateY(-3px); }
-    .testi-card::before {
-      content: '"';
-      font-family: 'Crimson Pro', serif;
-      font-size: 72px;
-      color: rgba(249,203,56,0.1);
-      line-height: 0.7;
-      position: absolute;
-      top: 18px; right: 20px;
+    .testi-card:hover { background: var(--off-black); }
+    .testi-q-mark {
+      font-family: 'Syne', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: rgba(200,168,75,0.15);
+      line-height: 0.8;
+      margin-bottom: 24px;
     }
     .testi-quote {
-      font-family: 'Crimson Pro', serif;
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 15px;
+      font-weight: 300;
       font-style: italic;
-      color: var(--grey-lt);
-      line-height: 1.7;
-      margin-bottom: 20px;
+      line-height: 1.75;
+      color: var(--dim);
+      margin-bottom: 32px;
     }
     .testi-author {
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--gold);
     }
+    @media (max-width: 860px) {
+      .testi-grid { grid-template-columns: 1fr; padding: 0 24px; }
+      .testi-header { padding: 0 24px; }
+      #testimonials { padding: 80px 0; }
+    }
 
     /* ═══════════════════════════════════════════════════════════
-       CONTACT SECTION
+       CONTACT
     ═══════════════════════════════════════════════════════════ */
-    #contact-bg { background: var(--dark-3); border-top: 1px solid rgba(197,149,15,0.12); }
-
-    .contact-layout {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 72px;
-      align-items: start;
+    #contact {
+      padding: 140px 0;
+      background: var(--off-black);
+      border-bottom: 1px solid var(--border);
     }
-    .contact-info { }
-    .contact-grid {
+    .contact-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      margin-top: 32px;
+      gap: 100px;
     }
-    .contact-box {
-      background: var(--dark-card);
-      border: 1px solid rgba(197,149,15,0.12);
-      padding: 24px 20px;
-      transition: border-color var(--transition), background var(--transition);
+    .contact-left .label { margin-bottom: 16px; }
+    .contact-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 54px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      margin-bottom: 24px;
     }
-    .contact-box:hover { border-color: var(--border-str); background: rgba(197,149,15,0.04); }
-    .contact-box-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--grey);
-      margin-bottom: 8px;
+    .contact-left p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--dim);
+      margin-bottom: 48px;
     }
-    .contact-box-value {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
+    .contact-details { display: flex; flex-direction: column; gap: 0; }
+    .cd-row {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .contact-box-value a { color: var(--muted); text-decoration: none; transition: color var(--transition); }
-    .contact-box-value a:hover { color: var(--yellow); }
+    .cd-row:first-child { border-top: 1px solid var(--border); }
+    .cd-key { font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dimmer); min-width: 72px; }
+    .cd-val { font-size: 14px; font-weight: 300; color: var(--dim); line-height: 1.6; }
+    .cd-val a { color: var(--dim); transition: color 0.2s; }
+    .cd-val a:hover { color: var(--white); }
 
     /* form */
     .contact-form { }
-    .form-group { margin-bottom: 20px; }
-    .form-label {
+    .form-field { margin-bottom: 24px; }
+    .form-field label {
       display: block;
-      font-family: 'Orbitron', monospace;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.25em;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--grey);
-      margin-bottom: 8px;
+      color: var(--dimmer);
+      margin-bottom: 10px;
     }
-    .form-input,
-    .form-textarea {
+    .form-field input,
+    .form-field textarea {
       width: 100%;
-      background: var(--dark-card);
-      border: 1px solid rgba(197,149,15,0.18);
-      color: var(--yellow-pale);
-      font-family: 'Space Grotesk', sans-serif;
+      background: var(--dark);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
       font-size: 14px;
+      font-weight: 300;
       padding: 14px 18px;
       outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition);
+      transition: border-color 0.2s, background 0.2s;
       -webkit-appearance: none;
     }
-    .form-input::placeholder, .form-textarea::placeholder { color: var(--grey); }
-    .form-input:focus, .form-textarea:focus {
-      border-color: var(--yellow);
-      box-shadow: 0 0 0 2px rgba(249,203,56,0.08);
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: var(--dimmer); }
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: rgba(200,168,75,0.5);
+      background: var(--dark-2);
     }
-    .form-textarea { resize: vertical; min-height: 140px; }
-
-    .btn-submit {
+    .form-field textarea { resize: vertical; min-height: 130px; }
+    .form-submit {
       width: 100%;
-      background: var(--yellow);
-      color: var(--dark-3);
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.25em;
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      border: none;
-      padding: 18px;
+      border: 1px solid var(--white);
+      padding: 17px;
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: background var(--transition), transform var(--transition);
+      transition: background 0.25s, color 0.25s, transform 0.2s;
     }
-    .btn-submit:hover { background: var(--yellow-pale); transform: translateY(-1px); }
-    .btn-submit:active { transform: translateY(0); }
+    .form-submit:hover { background: transparent; color: var(--white); transform: translateY(-1px); }
+
+    @media (max-width: 900px) {
+      .contact-inner { grid-template-columns: 1fr; gap: 56px; padding: 0 24px; }
+      #contact { padding: 80px 0; }
+    }
 
     /* ═══════════════════════════════════════════════════════════
        FOOTER
     ═══════════════════════════════════════════════════════════ */
     footer {
-      background: var(--dark-2);
-      border-top: 1px solid rgba(197,149,15,0.15);
+      background: var(--black);
+      border-top: 1px solid var(--border);
     }
     .footer-top {
-      max-width: 1280px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 48px 40px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
+      padding: 64px 48px 48px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 80px;
+      align-items: start;
     }
-    .footer-logo {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 18px;
-      letter-spacing: 0.08em;
-      color: var(--yellow);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .footer-brand .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      margin-bottom: 12px;
     }
-    .footer-logo::before {
-      content: '';
-      width: 4px;
-      height: 24px;
-      background: linear-gradient(180deg, var(--yellow) 0%, var(--gold) 100%);
+    .footer-brand .footer-logo span { color: var(--gold); }
+    .footer-brand p {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--dimmer);
+      line-height: 1.65;
+      max-width: 280px;
     }
-    .footer-tagline {
-      font-family: 'Crimson Pro', serif;
-      font-size: 14px;
-      font-style: italic;
-      color: var(--grey);
-      margin-top: 4px;
-      padding-left: 14px;
+    .footer-col h4 {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+      margin-bottom: 20px;
     }
-    .social-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col ul a {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--dim);
+      transition: color 0.2s;
     }
-    .social-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      padding: 8px 14px;
-      border: 1px solid rgba(197,149,15,0.18);
-      transition: border-color var(--transition), background var(--transition);
-    }
-    .social-link:hover { border-color: var(--yellow); background: rgba(197,149,15,0.06); }
-    .social-icon {
-      width: 22px; height: 22px;
-      border-radius: 3px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 900; color: white;
-      flex-shrink: 0;
-    }
-    .social-icon.li { background: #0A66C2; }
-    .social-icon.x  { background: #111; border: 1px solid #444; }
-    .social-icon.yt { background: #FF0000; }
-    .social-handle { font-size: 11px; color: var(--grey-lt); letter-spacing: 0.04em; }
-
+    .footer-col ul a:hover { color: var(--white); }
     .footer-bottom {
-      max-width: 1280px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 16px 40px;
-      border-top: 1px solid rgba(197,149,15,0.08);
+      padding: 20px 48px 40px;
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
     }
-    .footer-copy {
-      font-size: 11px;
-      color: var(--grey);
-      letter-spacing: 0.08em;
-    }
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-    .footer-links a {
-      font-size: 11px;
-      color: var(--grey);
-      text-decoration: none;
-      letter-spacing: 0.08em;
-      transition: color var(--transition);
-    }
-    .footer-links a:hover { color: var(--yellow); }
-
-    /* ═══════════════════════════════════════════════════════════
-       ANIMATIONS
-    ═══════════════════════════════════════════════════════════ */
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateX(24px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    /* scroll reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-
-    /* ═══════════════════════════════════════════════════════════
-       RESPONSIVE
-    ═══════════════════════════════════════════════════════════ */
-    @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      .hero-robot-wrap { max-width: 320px; margin: 0 auto; }
-      .product-grid { grid-template-columns: 1fr; }
-      .product-image-col { position: static; max-width: 300px; }
-      .stats-inner { grid-template-columns: repeat(2, 1fr); }
-      .stat-item:nth-child(2) { border-right: none; }
-      .stat-item:nth-child(3) { border-right: 1px solid rgba(197,149,15,0.12); }
-      .services-grid { grid-template-columns: 1fr; gap: 2px; }
-      .team-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
-      .testi-grid { grid-template-columns: 1fr; }
-      .contact-layout { grid-template-columns: 1fr; gap: 40px; }
-      .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--dark-2); border-bottom: 1px solid var(--border-str); padding: 20px 40px 28px; gap: 20px; }
-      .nav-links.open { display: flex; }
-      .nav-hamburger { display: flex; }
-    }
-
-    @media (max-width: 600px) {
-      .stats-inner { grid-template-columns: repeat(2, 1fr); }
-      .stat-item:nth-child(2) { border-right: none; }
-      .stat-item:nth-child(3) { border-right: 1px solid rgba(197,149,15,0.12); }
-      .contact-grid { grid-template-columns: 1fr; }
-      .footer-top { flex-direction: column; align-items: flex-start; }
-      .social-links { flex-wrap: wrap; }
-      .section, .section-full .section { padding-left: 20px; padding-right: 20px; }
-      .nav-inner { padding: 0 20px; }
-    }
-
-    @media (min-width: 901px) {
-      .nav-hamburger { display: none; }
-      .nav-links { display: flex !important; }
+    .footer-copy { font-size: 12px; color: var(--dimmer); letter-spacing: 0.05em; }
+    .footer-socials { display: flex; align-items: center; gap: 24px; }
+    .footer-socials a { font-size: 12px; color: var(--dimmer); letter-spacing: 0.1em; transition: color 0.2s; }
+    .footer-socials a:hover { color: var(--white); }
+    @media (max-width: 860px) {
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; padding: 48px 24px 36px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-bottom { padding: 20px 24px 32px; flex-direction: column; align-items: flex-start; gap: 16px; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ═══ NAVBAR ═══ -->
-  <nav id="navbar">
+  <!-- NAV -->
+  <nav id="nav">
     <div class="nav-inner">
-      <a href="#" class="nav-logo">UNTU AI</a>
-      <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
+      <a href="#" class="nav-logo">UNTU <span>AI</span></a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       <ul class="nav-links" id="nav-links">
-        <li><a href="#products">Products</a></li>
+        <li><a href="#product">Product</a></li>
+        <li><a href="#services">Services</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li><a href="#contact" class="nav-cta"><span>Request Demo</span></a></li>
+        <li><a href="#contact" class="nav-btn">Request Demo</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- ═══ HERO ═══ -->
+  <!-- HERO -->
   <section id="hero">
-    <div class="hero-grid-bg"></div>
-    <div class="hero-inner">
-      <div class="hero-content">
-
-        <div class="hero-eyebrow">
-          <span>Robotics &amp; Artificial Intelligence</span>
+    <div class="hero-bg">
+      <div class="hero-bg-placeholder">
+        <div class="robot-silhouette">
+          <span class="rs-icon">🤖</span>
+          <span class="rs-label">HotelBot H1</span>
         </div>
-
-        <h1 class="hero-title">
-          Service Robots<br>
-          <em>For the Hospitality<br>Industry</em>
-        </h1>
-
-        <p class="hero-sub">
-          Automate routine tasks. Elevate guest experiences.<br>
-          Run 24/7 without interruption.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#contact" class="btn-primary">
-            <span>Request a Demo</span>
-            <span class="arrow">→</span>
-          </a>
-          <a href="#products" class="btn-outline">View Product</a>
-        </div>
-
       </div>
+    </div>
+    <div class="hero-overlay-bottom"></div>
+    <div class="hero-overlay-left"></div>
 
-      <div class="hero-robot-wrap">
-        <div class="hero-robot-placeholder">
-          <div class="corner-bl"></div>
-          <span class="robot-icon">🤖</span>
-          <span class="robot-label">Robot Image</span>
-        </div>
-        <div class="robot-badge">HotelBot H1</div>
+    <div class="hero-content">
+      <div class="hero-tag"><span>Hotel Service Robotics</span></div>
+      <h1 class="hero-h1">The future of<br>hospitality is<br><em>autonomous.</em></h1>
+      <p class="hero-sub">Untu AI builds service robots that work alongside your team — delivering rooms, guiding guests, and running 24/7 without interruption.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-white">Request a Demo</a>
+        <a href="#product" class="btn-ghost">Explore HotelBot H1 →</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-cell sr sr-d1">
+        <div class="stat-n"><span data-count="50">0</span>+</div>
+        <div class="stat-l">Hotel Partners</div>
+      </div>
+      <div class="stat-cell sr sr-d2">
+        <div class="stat-n"><span data-count="10000">0</span>+</div>
+        <div class="stat-l">Room Deliveries</div>
+      </div>
+      <div class="stat-cell sr sr-d3">
+        <div class="stat-n">98<span style="font-size:0.6em;color:var(--gold)">%</span></div>
+        <div class="stat-l">Guest Satisfaction</div>
+      </div>
+      <div class="stat-cell sr sr-d4">
+        <div class="stat-n">24<span style="font-size:0.55em;color:var(--gold)">/7</span></div>
+        <div class="stat-l">Operational Uptime</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="intro-inner">
+      <div class="intro-left sr left">
+        <p class="label">Why Untu AI</p>
+        <h2>Intelligent automation built for hospitality.</h2>
+      </div>
+      <div class="intro-right sr right sr-d2">
+        <p>Hospitality is a human business — but not every task requires a human. Untu AI builds autonomous service robots that handle the repetitive, the logistical, and the routine, so your staff can focus on what truly matters: the guest relationship.</p>
+        <p>Our robots integrate seamlessly with your existing hotel management systems, operate across multiple floors via elevator integration, and deliver consistent, reliable service around the clock.</p>
       </div>
     </div>
   </section>
 
-  <!-- ═══ STATS ═══ -->
-  <div id="stats">
-    <div class="stats-inner">
-      <div class="stat-item reveal">
-        <div class="stat-num" data-target="50">0</div>
-        <div class="stat-label">Hotel Partners</div>
+  <!-- PRODUCT -->
+  <section id="product">
+    <div class="product-header">
+      <div class="product-header-left sr">
+        <p class="label">Product</p>
+        <h2>HotelBot H1</h2>
       </div>
-      <div class="stat-item reveal reveal-delay-1">
-        <div class="stat-num" data-target="10000">0</div>
-        <div class="stat-label">Successful Deliveries</div>
-      </div>
-      <div class="stat-item reveal reveal-delay-2">
-        <div class="stat-num">98%</div>
-        <div class="stat-label">Guest Satisfaction</div>
-      </div>
-      <div class="stat-item reveal reveal-delay-3">
-        <div class="stat-num">24/7</div>
-        <div class="stat-label">Operational Uptime</div>
+      <div class="product-header-right sr sr-d2">
+        <p>Our flagship autonomous service robot. Engineered for the demands of 24/7 hotel operations with multi-floor navigation, guest interaction, and HMS integration.</p>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ PRODUCT ═══ -->
-  <div id="products-bg">
-    <div class="section" id="products">
-
-      <div class="section-header reveal">
-        <p class="eyebrow">Our Products</p>
-        <h2>Meet the <em>HotelBot H1</em></h2>
-        <p>The flagship autonomous service robot engineered for demanding hospitality environments.</p>
+    <div class="product-body">
+      <div class="product-img-col sr left">
+        <div class="scan-line"></div>
+        <div class="product-img-placeholder">
+          <span class="pi-icon">🤖</span>
+          <span class="pi-label">Product Image</span>
+        </div>
+        <div class="product-sku"><span>UTH-001 · Autonomous Service Robot</span></div>
       </div>
 
-      <div class="product-grid">
-        <div class="product-image-col reveal">
-          <div class="product-placeholder">
-            <div class="corner-tr"></div>
-            <div class="corner-bl"></div>
-            <div class="product-code-badge">UTH-001</div>
-            <span class="p-icon">🤖</span>
-            <span class="p-label">Product Image</span>
-          </div>
+      <div class="product-info-col sr right sr-d2">
+        <div class="product-name-row">
+          <p class="product-name">Untu HotelBot H1</p>
+          <p class="product-subtitle">Autonomous Service Robot · UTH-001</p>
         </div>
 
-        <div class="product-info-col">
-          <div class="product-meta reveal">
-            <p class="product-name">Untu HotelBot H1</p>
-            <p class="product-code">Product Code: UTH-001 &nbsp;|&nbsp; Category: Autonomous Service Robot</p>
-            <p class="product-desc">
-              An autonomous service robot designed to enhance guest experiences in hotels through automated delivery, concierge guidance, and 24/7 information services. Built for reliability, seamlessly integrating with your existing infrastructure.
-            </p>
-          </div>
-
-          <div class="reveal reveal-delay-1">
-            <p class="specs-label">Technical Specifications</p>
-            <table class="specs-table">
-              <thead>
-                <tr>
-                  <th>Parameter</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td class="td-param">Cabin Volume</td><td class="td-val">45 L / layer</td></tr>
-                <tr><td class="td-param">Cabin Load</td><td class="td-val">10 KG / layer</td></tr>
-                <tr><td class="td-param">Speed</td><td class="td-val">0.8 m/s</td></tr>
-                <tr><td class="td-param">Battery Life</td><td class="td-val">9 – 12 hours</td></tr>
-                <tr><td class="td-param">Warranty</td><td class="td-val">1 year</td></tr>
-                <tr><td class="td-param">Passing Width</td><td class="td-val">70 cm continuous curve</td></tr>
-                <tr><td class="td-param">Dimensions</td><td class="td-val">500 × 500 × 1200 mm</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="reveal reveal-delay-2">
-            <p class="features-label">Key Features</p>
-            <ul class="feature-list">
-              <li class="feature-item">
-                <span class="feature-arrow">▶</span>
-                <span class="feature-text">Autonomous room service delivery with SLAM &amp; V-SLAM navigation — no floor modification required.</span>
-              </li>
-              <li class="feature-item">
-                <span class="feature-arrow">▶</span>
-                <span class="feature-text">Native integration with Hotel Management Systems (HMS) and elevator controls for seamless multi-floor operations.</span>
-              </li>
-              <li class="feature-item">
-                <span class="feature-arrow">▶</span>
-                <span class="feature-text">Interactive touchscreen and voice interface for intuitive guest engagement and real-time status updates.</span>
-              </li>
-            </ul>
-          </div>
+        <div class="specs-group">
+          <p class="specs-group-label">Technical Specifications</p>
+          <div class="spec-row"><span class="spec-key">Cabin Volume</span><span class="spec-val">45 L / layer</span></div>
+          <div class="spec-row"><span class="spec-key">Cabin Load</span><span class="spec-val">10 KG / layer</span></div>
+          <div class="spec-row"><span class="spec-key">Max Speed</span><span class="spec-val">0.8 m/s</span></div>
+          <div class="spec-row"><span class="spec-key">Battery Life</span><span class="spec-val">9 – 12 hours</span></div>
+          <div class="spec-row"><span class="spec-key">Passing Width</span><span class="spec-val">70 cm continuous curve</span></div>
+          <div class="spec-row"><span class="spec-key">Dimensions</span><span class="spec-val">500 × 500 × 1200 mm</span></div>
+          <div class="spec-row"><span class="spec-key">Warranty</span><span class="spec-val">1 year</span></div>
         </div>
-      </div>
 
-    </div>
-  </div>
-
-  <!-- ═══ SERVICES ═══ -->
-  <div id="services-bg">
-    <div class="section">
-      <div class="section-header reveal">
-        <p class="eyebrow">Capabilities</p>
-        <h2>What We <em>Do</em></h2>
-      </div>
-      <div class="services-grid">
-        <div class="service-card reveal">
-          <span class="service-icon">🤖</span>
-          <h3 class="service-title">Service Robots</h3>
-          <p class="service-desc">State-of-the-art autonomous robots for room service, luggage handling, and guest assistance — engineered to meet the exacting standards of luxury hospitality.</p>
-        </div>
-        <div class="service-card reveal reveal-delay-1">
-          <span class="service-icon">⚙️</span>
-          <h3 class="service-title">System Integration</h3>
-          <p class="service-desc">Seamless integration of robotic solutions with your existing Hotel Management System (HMS) and elevator controls, delivering a unified operational ecosystem.</p>
-        </div>
-        <div class="service-card reveal reveal-delay-2">
-          <span class="service-icon">🎓</span>
-          <h3 class="service-title">On-site Training</h3>
-          <p class="service-desc">Comprehensive on-site training for your staff to ensure smooth adoption, confident management, and proactive maintenance of the robotic fleet.</p>
-        </div>
+        <ul class="features-list">
+          <li class="feat-item">
+            <span class="feat-num">01</span>
+            <span class="feat-text">SLAM & V-SLAM autonomous navigation — adapts to your floor plan with no permanent infrastructure changes required.</span>
+          </li>
+          <li class="feat-item">
+            <span class="feat-num">02</span>
+            <span class="feat-text">Native HMS integration and elevator control for seamless multi-floor delivery operations across the entire property.</span>
+          </li>
+          <li class="feat-item">
+            <span class="feat-num">03</span>
+            <span class="feat-text">Interactive touchscreen and voice interface for direct guest engagement, real-time status, and delivery confirmation.</span>
+          </li>
+        </ul>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ═══ ABOUT ═══ -->
-  <div id="about-bg">
-    <div class="section" id="about">
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header sr">
+      <p class="label">What We Offer</p>
+      <h2>End-to-end robotics for your hotel.</h2>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card sr sr-d1">
+        <p class="svc-num">01</p>
+        <span class="svc-icon">🤖</span>
+        <h3 class="svc-title">Service Robots</h3>
+        <p class="svc-desc">Autonomous robots for room service delivery, luggage handling, and guest assistance — engineered to meet the standards of modern hospitality.</p>
+      </div>
+      <div class="svc-card sr sr-d2">
+        <p class="svc-num">02</p>
+        <span class="svc-icon">⚙️</span>
+        <h3 class="svc-title">System Integration</h3>
+        <p class="svc-desc">Deep integration with your Hotel Management System and elevator infrastructure. Your robot fleet runs as part of your operation, not apart from it.</p>
+      </div>
+      <div class="svc-card sr sr-d3">
+        <p class="svc-num">03</p>
+        <span class="svc-icon">🎓</span>
+        <h3 class="svc-title">On-site Training</h3>
+        <p class="svc-desc">Comprehensive training and ongoing support ensures your team is fully confident managing, operating, and maintaining the robotic fleet.</p>
+      </div>
+    </div>
+  </section>
 
-      <div class="section-header reveal">
-        <p class="eyebrow">Company Overview</p>
-        <h2>About <em>Us</em></h2>
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-inner">
+      <div class="about-top">
+        <div class="about-top-left sr left">
+          <p class="label">About Us</p>
+          <h2>Pioneering intelligent automation for hospitality.</h2>
+        </div>
+        <div class="about-top-right sr right sr-d2">
+          <p class="about-mission">"To be the leading partner for the hospitality industry in the adoption of service automation — enhancing guest experiences and operational efficiency through state-of-the-art robotics."</p>
+        </div>
       </div>
 
-      <div class="mission-block reveal">
-        <p class="mission-text">
-          "To be the leading partner for the hospitality industry in the adoption of service automation — enhancing guest experiences and operational efficiency through state-of-the-art robotics."
-        </p>
-      </div>
-
-      <p style="font-family:'Orbitron',monospace; font-size:10px; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold); margin-bottom:24px;" class="reveal">Our Founders</p>
-
+      <p class="label team-label sr">Founding Team</p>
       <div class="team-grid">
-        <div class="team-card reveal">
-          <div class="avatar-placeholder">👨‍💻</div>
+        <div class="team-card sr sr-d1">
+          <div class="avatar">👨‍💻</div>
           <p class="team-name">Sudhir Yadav</p>
-          <p class="team-role">Co-Founder &amp; Head of Technology</p>
-          <p class="team-bio">PhD in Robotics. Leads engineering and AI development, ensuring our robots are intelligent, reliable, and safe for hospitality environments.</p>
+          <p class="team-role">Co-Founder · Head of Technology</p>
+          <p class="team-bio">PhD in Robotics. Leads all engineering and AI development. Previously at TIH iHubDrishti and TCS Innovation Lab, with research experience at IIT Jodhpur and IIIT Hyderabad.</p>
         </div>
-        <div class="team-card reveal reveal-delay-1">
-          <div class="avatar-placeholder">👨‍💼</div>
+        <div class="team-card sr sr-d2">
+          <div class="avatar">👨‍💼</div>
           <p class="team-name">Shivam Srivastava</p>
-          <p class="team-role">Co-Founder &amp; Head of Operations</p>
-          <p class="team-bio">Manages client integration and operational deployment, ensuring a seamless transition to automated services for our hotel partners.</p>
+          <p class="team-role">Co-Founder · Head of Operations</p>
+          <p class="team-bio">Manages client integration, deployment logistics, and ongoing operational partnerships — ensuring every hotel transition to automation is seamless.</p>
         </div>
-        <div class="team-card reveal reveal-delay-2">
-          <div class="avatar-placeholder">📣</div>
+        <div class="team-card sr sr-d3">
+          <div class="avatar">📣</div>
           <p class="team-name">Shivam Jaiswal</p>
-          <p class="team-role">Co-Founder &amp; Head of Marketing</p>
-          <p class="team-bio">Leads partnership and growth strategies within the global hospitality sector, building strong relationships with premier hotel brands.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ═══ TESTIMONIALS ═══ -->
-  <div id="testimonials-bg">
-    <div class="section">
-      <div class="section-header reveal">
-        <p class="eyebrow">Client Stories</p>
-        <h2>What Our <em>Clients Say</em></h2>
-      </div>
-      <div class="testi-grid">
-        <div class="testi-card reveal">
-          <p class="testi-quote">"The service robots from Untu AI have revolutionized our room service operations. Guests are consistently delighted and our front-line staff now focus on truly meaningful interactions."</p>
-          <p class="testi-author">— General Manager, Luxury Hotel</p>
-        </div>
-        <div class="testi-card reveal reveal-delay-1">
-          <p class="testi-quote">"Integrating Untu AI's robots was seamless from day one. Their team provided excellent technical support and the system works flawlessly with our existing hotel infrastructure."</p>
-          <p class="testi-author">— Director of Operations, Hotel Group</p>
-        </div>
-        <div class="testi-card reveal reveal-delay-2">
-          <p class="testi-quote">"Our guests love the novelty and the reliability. The robots have become a signature feature of our property — something guests actively mention in their reviews."</p>
-          <p class="testi-author">— Owner, Boutique Hotel</p>
+          <p class="team-role">Co-Founder · Head of Marketing</p>
+          <p class="team-bio">Leads growth strategy and hospitality sector partnerships, building relationships with hotel brands across the global market.</p>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ═══ CONTACT ═══ -->
-  <div id="contact-bg">
-    <div class="section" id="contact">
-      <div class="section-header reveal">
-        <p class="eyebrow">Reach Out</p>
-        <h2>Get In <em>Touch</em></h2>
-        <p>Interested in deploying service robots at your property? We'd love to discuss how Untu AI can elevate your guest experience.</p>
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="testi-header sr">
+      <p class="label">Client Stories</p>
+      <h2>What our hotel partners say.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card sr sr-d1">
+        <div class="testi-q-mark">"</div>
+        <p class="testi-quote">The service robots from Untu AI have revolutionized our room service operations. Guests are consistently delighted and our staff now focus on meaningful guest interactions rather than logistics.</p>
+        <p class="testi-author">General Manager · Luxury Hotel</p>
       </div>
+      <div class="testi-card sr sr-d2">
+        <div class="testi-q-mark">"</div>
+        <p class="testi-quote">Integration was seamless from day one. Their team provided exceptional technical support and the system works flawlessly within our existing hotel infrastructure and HMS.</p>
+        <p class="testi-author">Director of Operations · Hotel Group</p>
+      </div>
+      <div class="testi-card sr sr-d3">
+        <div class="testi-q-mark">"</div>
+        <p class="testi-quote">Our guests love the experience. The robots have become a signature feature of our property — guests actively mention them in reviews and social posts.</p>
+        <p class="testi-author">Owner · Boutique Hotel</p>
+      </div>
+    </div>
+  </section>
 
-      <div class="contact-layout">
-
-        <div class="contact-info reveal">
-          <p style="font-family:'Crimson Pro',serif; font-size:17px; font-weight:300; color:var(--grey-lt); line-height:1.75; margin-bottom:8px;">
-            From initial consultation through deployment and ongoing support, we partner with you at every step of your automation journey.
-          </p>
-          <div class="contact-grid">
-            <div class="contact-box">
-              <p class="contact-box-label">Address</p>
-              <p class="contact-box-value">C 2002, Flora Heritage<br>Greater Noida — 201306<br>India</p>
-            </div>
-            <div class="contact-box">
-              <p class="contact-box-label">Email</p>
-              <p class="contact-box-value">
-                <a href="mailto:contact@untuai.com">contact@untuai.com</a><br>
-                <a href="mailto:info@untuai.com">info@untuai.com</a>
-              </p>
-            </div>
-            <div class="contact-box">
-              <p class="contact-box-label">Phone</p>
-              <p class="contact-box-value">
-                <a href="tel:+918860112611">+91 88601 12611</a><br>
-                <a href="tel:+916376984160">+91 63769 84160</a>
-              </p>
-            </div>
-            <div class="contact-box">
-              <p class="contact-box-label">Web</p>
-              <p class="contact-box-value">
-                <a href="http://www.untuai.com">www.untuai.com</a><br>
-                <a href="mailto:hr@untuai.com">hr@untuai.com</a>
-              </p>
-            </div>
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="contact-left sr left">
+        <p class="label">Get In Touch</p>
+        <h2>Let's talk about your property.</h2>
+        <p>Whether you're exploring automation for the first time or ready to deploy, we'd love to understand your operation and show you what's possible.</p>
+        <div class="contact-details">
+          <div class="cd-row">
+            <span class="cd-key">Address</span>
+            <span class="cd-val">C 2002, Flora Heritage, Greater Noida — 201306, India</span>
+          </div>
+          <div class="cd-row">
+            <span class="cd-key">Email</span>
+            <span class="cd-val"><a href="mailto:contact@untuai.com">contact@untuai.com</a></span>
+          </div>
+          <div class="cd-row">
+            <span class="cd-key">Phone</span>
+            <span class="cd-val"><a href="tel:+918860112611">+91 88601 12611</a></span>
+          </div>
+          <div class="cd-row">
+            <span class="cd-key">Web</span>
+            <span class="cd-val"><a href="http://www.untuai.com">www.untuai.com</a></span>
           </div>
         </div>
+      </div>
 
-        <div class="contact-form reveal reveal-delay-1">
-          <form action="#" method="POST">
-            <div class="form-group">
-              <label class="form-label" for="name">Full Name</label>
-              <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="email">Email Address</label>
-              <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="hotel">Hotel / Company</label>
-              <input class="form-input" type="text" id="hotel" name="hotel" placeholder="Hotel or company name">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="message">Message</label>
-              <textarea class="form-textarea" id="message" name="message" placeholder="Tell us about your property and how we can help…" required></textarea>
-            </div>
-            <button type="submit" class="btn-submit">Send Message →</button>
-          </form>
-        </div>
-
+      <div class="contact-form sr right sr-d2">
+        <form action="#" method="POST">
+          <div class="form-field">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-field">
+            <label for="hotel">Hotel / Company</label>
+            <input type="text" id="hotel" name="hotel" placeholder="Your hotel or company">
+          </div>
+          <div class="form-field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us about your property and what you're looking for…" required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Message</button>
+        </form>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ═══ FOOTER ═══ -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-top">
-      <div>
-        <div class="footer-logo">UNTU AI</div>
-        <p class="footer-tagline">Engineering intelligent hospitality since 2024</p>
+      <div class="footer-brand">
+        <div class="footer-logo">UNTU <span>AI</span></div>
+        <p>Autonomous service robots for the hospitality industry. Greater Noida, India.</p>
       </div>
-      <div class="social-links">
-        <a href="https://linkedin.com/company/untuai" class="social-link" target="_blank" rel="noopener">
-          <div class="social-icon li">in</div>
-          <span class="social-handle">LinkedIn</span>
-        </a>
-        <a href="https://x.com/untuai" class="social-link" target="_blank" rel="noopener">
-          <div class="social-icon x">𝕏</div>
-          <span class="social-handle">@untuai</span>
-        </a>
-        <a href="https://youtube.com/@untuai" class="social-link" target="_blank" rel="noopener">
-          <div class="social-icon yt">▶</div>
-          <span class="social-handle">YouTube</span>
-        </a>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#product">Product</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@untuai.com">contact@untuai.com</a></li>
+          <li><a href="mailto:info@untuai.com">info@untuai.com</a></li>
+          <li><a href="tel:+918860112611">+91 88601 12611</a></li>
+        </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Untu AI — C 2002, Flora Heritage, Greater Noida 201306, India</p>
-      <div class="footer-links">
-        <a href="#products">Products</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+      <p class="footer-copy">© 2026 Untu AI Pvt. Ltd. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="https://linkedin.com/company/untuai" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://x.com/untuai" target="_blank" rel="noopener">X (Twitter)</a>
+        <a href="https://youtube.com/@untuai" target="_blank" rel="noopener">YouTube</a>
       </div>
     </div>
   </footer>
 
   <script>
-    /* ── Navbar scroll state ── */
-    const navbar = document.getElementById('navbar');
+    /* nav fill on scroll */
+    const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
+      nav.classList.toggle('filled', window.scrollY > 20);
     }, { passive: true });
 
-    /* ── Hamburger ── */
-    const hamburger = document.getElementById('hamburger');
-    const navLinks  = document.getElementById('nav-links');
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      navLinks.classList.toggle('open');
+    /* hamburger */
+    const hb = document.getElementById('hamburger');
+    const nl = document.getElementById('nav-links');
+    hb.addEventListener('click', () => {
+      hb.classList.toggle('open');
+      nl.classList.toggle('open');
     });
-    navLinks.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        hamburger.classList.remove('open');
-        navLinks.classList.remove('open');
-      });
-    });
+    nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      hb.classList.remove('open');
+      nl.classList.remove('open');
+    }));
 
-    /* ── Scroll reveal ── */
-    const revealEls = document.querySelectorAll('.reveal');
-    const revealObs = new IntersectionObserver((entries) => {
+    /* scroll reveal */
+    const srEls = document.querySelectorAll('.sr');
+    const srObs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          revealObs.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); srObs.unobserve(e.target); }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(el => revealObs.observe(el));
+    }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
+    srEls.forEach(el => srObs.observe(el));
 
-    /* ── Counter animation for stats ── */
-    function animateCounter(el, target, suffix = '') {
-      const duration = 1800;
+    /* count-up animation */
+    function countUp(el, target, duration = 1800) {
       const start = performance.now();
-      const update = (now) => {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const value = Math.round(eased * target);
-        el.textContent = value >= 1000
-          ? (value / 1000).toFixed(0) + ',000+'
-          : value + (target > 10 ? '+' : '');
-        if (progress < 1) requestAnimationFrame(update);
+      const tick = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const val = Math.round(ease * target);
+        el.textContent = val >= 10000 ? (val/1000).toFixed(0) + ',000' : val;
+        if (p < 1) requestAnimationFrame(tick);
       };
-      requestAnimationFrame(update);
+      requestAnimationFrame(tick);
     }
-
-    const counterObs = new IntersectionObserver((entries) => {
+    const cObs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          const target = parseInt(e.target.dataset.target, 10);
-          if (!isNaN(target)) animateCounter(e.target, target);
-          counterObs.unobserve(e.target);
+          const t = parseInt(e.target.dataset.count, 10);
+          if (!isNaN(t)) countUp(e.target, t);
+          cObs.unobserve(e.target);
         }
       });
     }, { threshold: 0.5 });
-
-    document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
+    document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
   </script>
-
 </body>
 </html>
