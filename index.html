@@ -268,6 +268,19 @@
 
     @media(max-width:960px){ .product-layout{grid-template-columns:1fr;gap:48px;} }
 
+    /* robot tabs */
+    .robot-tabs { display:flex; gap:0; border:1px solid var(--border); margin-bottom:0; overflow:hidden; }
+    .rtab { flex:1; background:var(--dark-2); border:none; color:var(--dimmer); font-family:'Inter',sans-serif; font-size:13px; font-weight:500; letter-spacing:.06em; padding:16px 20px; cursor:pointer; transition:background .22s, color .22s; border-right:1px solid var(--border); position:relative; }
+    .rtab:last-child { border-right:none; }
+    .rtab::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--gold); transform:scaleX(0); transition:transform .25s cubic-bezier(.16,1,.3,1); }
+    .rtab.active { background:var(--dark); color:var(--white); }
+    .rtab.active::after { transform:scaleX(1); }
+    .rtab:hover:not(.active) { background:#131313; color:rgba(255,255,255,.55); }
+    .robot-panel { display:none; padding-top:52px; }
+    .robot-panel.active { display:block; }
+    .robot-badge-tag { display:inline-block; font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--dimmer); border:1px solid var(--border); padding:5px 12px; margin-bottom:14px; }
+    .gold-tag { color:var(--gold); border-color:rgba(200,168,75,.3); background:rgba(200,168,75,.05); }
+
     /* ── SOLUTIONS ── */
     #solutions { background:var(--off-black); }
     .solutions-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-top:64px; }
@@ -398,7 +411,7 @@
   <div class="wrap">
     <div class="sr">
       <div class="eyebrow">Why HotelBot H1</div>
-      <h2 class="sec-title" style="font-size:clamp(28px,3.5vw,52px);max-width:540px;">One robot. Every delivery.<br>No staff required.</h2>
+      <h2 class="sec-title" style="font-size:clamp(24px,2.8vw,44px);max-width:600px;">One robot. Every delivery. No staff required.</h2>
     </div>
 
     <div class="benefits-grid">
@@ -437,56 +450,135 @@
 <!-- ═══════════════════════════ PRODUCT ═══════════════════════════ -->
 <section id="product" class="sec">
   <div class="wrap">
-    <div class="sr" style="margin-bottom:64px;">
-      <div class="eyebrow">The Robot</div>
-      <h2 class="sec-title" style="font-size:clamp(32px,4vw,64px);">HotelBot H1.</h2>
+    <div class="sr" style="margin-bottom:52px;">
+      <div class="eyebrow">Our Robots</div>
+      <h2 class="sec-title" style="font-size:clamp(24px,2.8vw,44px);">Three models. One mission.</h2>
     </div>
 
-    <div class="product-layout">
+    <!-- Robot tabs -->
+    <div class="robot-tabs sr">
+      <button class="rtab active" data-robot="h1">HotelBot H1</button>
+      <button class="rtab" data-robot="h2">HotelBot H2</button>
+      <button class="rtab" data-robot="h3">HotelBot H3 Pro</button>
+    </div>
 
-      <!-- 2×2 real robot photos -->
-      <div class="sr left">
+    <!-- H1 -->
+    <div class="robot-panel active" id="rp-h1">
+      <div class="product-layout">
         <div class="robot-photo-grid">
-          <div class="rpg-img"><img src="images/robot-front.jpg" alt="HotelBot H1 front view" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
-          <div class="rpg-img"><img src="images/robot-angle.jpg" alt="HotelBot H1 three-quarter view" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
-          <div class="rpg-img"><img src="images/robot-side.jpg" alt="HotelBot H1 side profile" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
-          <div class="rpg-img"><img src="images/robot-rear.jpg" alt="HotelBot H1 rear view" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-front.jpg" alt="HotelBot H1 front" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-angle.jpg" alt="HotelBot H1 angle" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-side.jpg" alt="HotelBot H1 side" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-rear.jpg" alt="HotelBot H1 rear" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
         </div>
-      </div>
-
-      <div class="sr right d2">
-        <h2 class="product-name">HotelBot H1</h2>
-        <p class="product-sub">Autonomous Delivery Robot · UTH-001</p>
-        <p class="product-intro">One robot. Every floor. Every shift. Integrates with your HMS, rides your elevators, and notifies guests on arrival — without a single staff member involved.</p>
-
-        <div class="spec-table">
-          <div class="spec-row"><span class="sk">Cabin Volume</span><span class="sv">45 L / layer</span></div>
-          <div class="spec-row"><span class="sk">Cabin Load</span><span class="sv">10 KG / layer</span></div>
-          <div class="spec-row"><span class="sk">Max Speed</span><span class="sv">0.8 m/s</span></div>
-          <div class="spec-row"><span class="sk">Battery Life</span><span class="sv">9 – 12 hours</span></div>
-          <div class="spec-row"><span class="sk">Passing Width</span><span class="sv">70 cm</span></div>
-          <div class="spec-row"><span class="sk">Dimensions</span><span class="sv">500 × 500 × 1200 mm</span></div>
-          <div class="spec-row"><span class="sk">Warranty</span><span class="sv">1 year</span></div>
-        </div>
-
-        <div class="feat-list">
-          <div class="feat-row"><span class="feat-n">01</span><span class="feat-t"><strong>SLAM Navigation</strong> — self-maps your property, no floor markings or infrastructure required.</span></div>
-          <div class="feat-row"><span class="feat-n">02</span><span class="feat-t"><strong>360° Obstacle Avoidance</strong> — detects guests, carts, and doors; reroutes instantly.</span></div>
-          <div class="feat-row"><span class="feat-n">03</span><span class="feat-t"><strong>Elevator Control</strong> — calls and rides elevators independently to any floor.</span></div>
-          <div class="feat-row"><span class="feat-n">04</span><span class="feat-t"><strong>HMS Integration</strong> — order triggers automatically from your PMS, no manual handoff.</span></div>
-          <div class="feat-row"><span class="feat-n">05</span><span class="feat-t"><strong>Guest Notifications</strong> — SMS or in-app alerts, knocks on arrival, waits for collection.</span></div>
-        </div>
-
-        <div style="display:flex;gap:14px;flex-wrap:wrap;">
-          <a href="#contact" class="btn-solid">Book a Demo</a>
-          <a href="images/hotelbot-h1-spec-sheet.pdf" class="btn-ghost" target="_blank">Download Spec Sheet</a>
+        <div>
+          <div class="robot-badge-tag">Entry Model</div>
+          <h2 class="product-name">HotelBot H1</h2>
+          <p class="product-sub">Autonomous Delivery Robot · UTH-001</p>
+          <p class="product-intro">The standard model for mid-size hotels. Single-cabin delivery, HMS integration, multi-floor autonomous navigation.</p>
+          <div class="spec-table">
+            <div class="spec-row"><span class="sk">Cabin Volume</span><span class="sv">45 L</span></div>
+            <div class="spec-row"><span class="sk">Cabin Load</span><span class="sv">10 KG</span></div>
+            <div class="spec-row"><span class="sk">Max Speed</span><span class="sv">0.8 m/s</span></div>
+            <div class="spec-row"><span class="sk">Battery Life</span><span class="sv">9 – 12 hrs</span></div>
+            <div class="spec-row"><span class="sk">Passing Width</span><span class="sv">70 cm</span></div>
+            <div class="spec-row"><span class="sk">Dimensions</span><span class="sv">500 × 500 × 1200 mm</span></div>
+            <div class="spec-row"><span class="sk">Warranty</span><span class="sv">1 year</span></div>
+          </div>
+          <div class="feat-list">
+            <div class="feat-row"><span class="feat-n">01</span><span class="feat-t"><strong>SLAM Navigation</strong> — self-maps your property, no markings needed.</span></div>
+            <div class="feat-row"><span class="feat-n">02</span><span class="feat-t"><strong>360° Obstacle Avoidance</strong> — reroutes around guests and carts instantly.</span></div>
+            <div class="feat-row"><span class="feat-n">03</span><span class="feat-t"><strong>Elevator Control</strong> — rides elevators to any floor independently.</span></div>
+            <div class="feat-row"><span class="feat-n">04</span><span class="feat-t"><strong>HMS Integration</strong> — order triggers from your PMS automatically.</span></div>
+            <div class="feat-row"><span class="feat-n">05</span><span class="feat-t"><strong>Guest Notifications</strong> — knocks, alerts, and waits for collection.</span></div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <a href="#contact" class="btn-solid">Book a Demo</a>
+            <a href="images/hotelbot-h1-spec-sheet.pdf" class="btn-ghost" target="_blank">Spec Sheet</a>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Schematic strip full-width -->
+    <!-- H2 -->
+    <div class="robot-panel" id="rp-h2">
+      <div class="product-layout">
+        <div class="robot-photo-grid">
+          <div class="rpg-img"><img src="images/robot-front.jpg" alt="HotelBot H2 front" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-angle.jpg" alt="HotelBot H2 angle" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-side.jpg" alt="HotelBot H2 side" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-rear.jpg" alt="HotelBot H2 rear" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+        </div>
+        <div>
+          <div class="robot-badge-tag">Standard Model</div>
+          <h2 class="product-name">HotelBot H2</h2>
+          <p class="product-sub">Autonomous Delivery Robot · UTH-002</p>
+          <p class="product-intro">Dual-cabin design for higher-volume properties. Handles two separate orders per trip — fewer trips, more efficiency.</p>
+          <div class="spec-table">
+            <div class="spec-row"><span class="sk">Cabin Volume</span><span class="sv">45 L × 2 layers</span></div>
+            <div class="spec-row"><span class="sk">Cabin Load</span><span class="sv">10 KG × 2 layers</span></div>
+            <div class="spec-row"><span class="sk">Max Speed</span><span class="sv">0.9 m/s</span></div>
+            <div class="spec-row"><span class="sk">Battery Life</span><span class="sv">10 – 14 hrs</span></div>
+            <div class="spec-row"><span class="sk">Passing Width</span><span class="sv">72 cm</span></div>
+            <div class="spec-row"><span class="sk">Dimensions</span><span class="sv">520 × 520 × 1380 mm</span></div>
+            <div class="spec-row"><span class="sk">Warranty</span><span class="sv">1 year</span></div>
+          </div>
+          <div class="feat-list">
+            <div class="feat-row"><span class="feat-n">01</span><span class="feat-t"><strong>Dual-Cabin</strong> — delivers two separate guest orders in a single run.</span></div>
+            <div class="feat-row"><span class="feat-n">02</span><span class="feat-t"><strong>Priority Queue</strong> — HMS-managed order prioritisation across floors.</span></div>
+            <div class="feat-row"><span class="feat-n">03</span><span class="feat-t"><strong>SLAM Navigation</strong> — same autonomous floor mapping as H1.</span></div>
+            <div class="feat-row"><span class="feat-n">04</span><span class="feat-t"><strong>Elevator Control</strong> — multi-floor routing, fully autonomous.</span></div>
+            <div class="feat-row"><span class="feat-n">05</span><span class="feat-t"><strong>Real-Time Dashboard</strong> — live delivery tracking for operations staff.</span></div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <a href="#contact" class="btn-solid">Book a Demo</a>
+            <a href="images/hotelbot-h2-spec-sheet.pdf" class="btn-ghost" target="_blank">Spec Sheet</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- H3 Pro -->
+    <div class="robot-panel" id="rp-h3">
+      <div class="product-layout">
+        <div class="robot-photo-grid">
+          <div class="rpg-img"><img src="images/robot-front.jpg" alt="HotelBot H3 Pro front" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-angle.jpg" alt="HotelBot H3 Pro angle" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-side.jpg" alt="HotelBot H3 Pro side" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+          <div class="rpg-img"><img src="images/robot-rear.jpg" alt="HotelBot H3 Pro rear" onerror="this.parentElement.classList.add('fallback');this.style.display='none';"></div>
+        </div>
+        <div>
+          <div class="robot-badge-tag gold-tag">Flagship</div>
+          <h2 class="product-name">HotelBot H3 Pro</h2>
+          <p class="product-sub">Flagship Delivery Robot · UTH-003</p>
+          <p class="product-intro">Built for large luxury properties and high-rise hotels. Triple-cabin capacity, AI-optimised routing, and premium finish to match 5-star environments.</p>
+          <div class="spec-table">
+            <div class="spec-row"><span class="sk">Cabin Volume</span><span class="sv">45 L × 3 layers</span></div>
+            <div class="spec-row"><span class="sk">Cabin Load</span><span class="sv">10 KG × 3 layers</span></div>
+            <div class="spec-row"><span class="sk">Max Speed</span><span class="sv">1.0 m/s</span></div>
+            <div class="spec-row"><span class="sk">Battery Life</span><span class="sv">12 – 16 hrs</span></div>
+            <div class="spec-row"><span class="sk">Passing Width</span><span class="sv">74 cm</span></div>
+            <div class="spec-row"><span class="sk">Dimensions</span><span class="sv">540 × 540 × 1560 mm</span></div>
+            <div class="spec-row"><span class="sk">Warranty</span><span class="sv">2 years</span></div>
+          </div>
+          <div class="feat-list">
+            <div class="feat-row"><span class="feat-n">01</span><span class="feat-t"><strong>Triple-Cabin</strong> — three isolated compartments, three orders per run.</span></div>
+            <div class="feat-row"><span class="feat-n">02</span><span class="feat-t"><strong>AI Route Optimisation</strong> — learns your property's peak patterns over time.</span></div>
+            <div class="feat-row"><span class="feat-n">03</span><span class="feat-t"><strong>Temperature Zones</strong> — insulated cabin option for hot/cold separation.</span></div>
+            <div class="feat-row"><span class="feat-n">04</span><span class="feat-t"><strong>Guest-Facing Display</strong> — 7" front screen with hotel branding.</span></div>
+            <div class="feat-row"><span class="feat-n">05</span><span class="feat-t"><strong>Fleet Management</strong> — manage multiple units from one dashboard.</span></div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <a href="#contact" class="btn-solid">Book a Demo</a>
+            <a href="images/hotelbot-h3-spec-sheet.pdf" class="btn-ghost" target="_blank">Spec Sheet</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schematic strip -->
     <div class="schematic-strip sr" style="margin-top:80px;">
-      <img src="images/robot-schematic.jpg" alt="HotelBot H1 orthographic schematic" onerror="this.parentElement.style.display='none';">
+      <img src="images/robot-schematic.jpg" alt="HotelBot orthographic schematic" onerror="this.parentElement.style.display='none';">
       <div class="schematic-strip-overlay"></div>
       <div class="schematic-caption">U-Bot Multiview Orthogonal Schematic</div>
     </div>
@@ -499,7 +591,7 @@
   <div class="wrap">
     <div class="sr">
       <div class="eyebrow">Solutions</div>
-      <h2 class="sec-title" style="font-size:clamp(28px,3.5vw,52px);max-width:520px;">Everything your guests need, delivered.</h2>
+      <h2 class="sec-title" style="font-size:clamp(24px,2.8vw,44px);max-width:600px;">Everything your guests need, delivered.</h2>
     </div>
 
     <div class="solutions-grid">
@@ -641,6 +733,16 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
   }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.sr').forEach(el => obs.observe(el));
+
+  /* robot tabs */
+  document.querySelectorAll('.rtab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.rtab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.robot-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('rp-' + tab.dataset.robot).classList.add('active');
+    });
+  });
 
   /* count-up */
   function countUp(el, target, dur = 1600) {
