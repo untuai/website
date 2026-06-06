@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Untu AI — Hotel Service Robots</title>
-  <meta name="description" content="Untu AI builds autonomous service robots for hotels. Automate room delivery, enhance guest experience, operate 24/7.">
+  <title>Untu AI — Autonomous Hotel Delivery Robots</title>
+  <meta name="description" content="Untu AI's HotelBot H1 delivers room service, towels, amenities, and guest requests 24/7 — autonomously. No staff required.">
   <link rel="icon" href="images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,200;0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-    /* ─── RESET & BASE ──────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-size: 16px; }
 
     :root {
-      --black:   #000000;
+      --black:     #000000;
       --off-black: #0a0a0a;
-      --dark:    #111111;
-      --dark-2:  #1a1a1a;
-      --border:  rgba(255,255,255,0.08);
+      --dark:      #111111;
+      --dark-2:    #1a1a1a;
+      --dark-3:    #141414;
+      --border:    rgba(255,255,255,0.08);
       --border-md: rgba(255,255,255,0.14);
-      --white:   #ffffff;
+      --white:     #ffffff;
       --off-white: #f0ede8;
-      --dim:     rgba(255,255,255,0.45);
-      --dimmer:  rgba(255,255,255,0.28);
-      --gold:    #c8a84b;
-      --gold-lt: #e8c96a;
-      --nav-h:   72px;
+      --dim:       rgba(255,255,255,0.45);
+      --dimmer:    rgba(255,255,255,0.28);
+      --gold:      #c8a84b;
+      --gold-lt:   #e8c96a;
+      --gold-dim:  rgba(200,168,75,0.12);
+      --nav-h:     72px;
     }
 
     body {
@@ -44,12 +44,10 @@
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; }
 
-    /* ─── SCROLLBAR ──────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--gold); }
 
-    /* ─── UTILITIES ──────────────────────────────────────────── */
     .label {
       font-size: 11px;
       font-weight: 500;
@@ -57,32 +55,43 @@
       text-transform: uppercase;
       color: var(--dimmer);
     }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
+    .gold-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
     }
-    @media (max-width: 768px) { .container { padding: 0 24px; } }
+    .gold-label::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
 
-    /* ─── SCROLL REVEAL ──────────────────────────────────────── */
+    /* ── SCROLL REVEAL ── */
     .sr {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+      transform: translateY(36px);
+      transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1), transform 0.85s cubic-bezier(0.16,1,0.3,1);
     }
-    .sr.up { transform: translateY(40px); }
-    .sr.left { transform: translateX(-40px); }
-    .sr.right { transform: translateX(40px); }
+    .sr.left  { transform: translateX(-36px); }
+    .sr.right { transform: translateX(36px); }
     .sr.visible { opacity: 1; transform: translate(0,0); }
-    .sr-d1 { transition-delay: 0.1s; }
-    .sr-d2 { transition-delay: 0.2s; }
-    .sr-d3 { transition-delay: 0.3s; }
-    .sr-d4 { transition-delay: 0.4s; }
-    .sr-d5 { transition-delay: 0.5s; }
+    .sr-d1 { transition-delay: 0.08s; }
+    .sr-d2 { transition-delay: 0.16s; }
+    .sr-d3 { transition-delay: 0.24s; }
+    .sr-d4 { transition-delay: 0.32s; }
+    .sr-d5 { transition-delay: 0.40s; }
+    .sr-d6 { transition-delay: 0.48s; }
 
-    /* ═══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════
        NAV
-    ═══════════════════════════════════════════════════════════ */
+    ══════════════════════════════════════════ */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -94,9 +103,9 @@
       border-bottom: 1px solid transparent;
     }
     nav.filled {
-      background: rgba(0,0,0,0.82);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border-color: rgba(255,255,255,0.07);
     }
     .nav-inner {
@@ -109,68 +118,38 @@
       align-items: center;
       gap: 32px;
     }
-
-    /* logo */
     .nav-logo img {
-      height: 36px;
-      width: auto;
-      display: block;
-      /* keep logo bright/white on dark video */
+      height: 36px; width: auto; display: block;
       filter: brightness(0) invert(1);
       transition: opacity 0.2s;
     }
-    .nav-logo:hover img { opacity: 0.8; }
-
-    /* centered nav links */
+    .nav-logo:hover img { opacity: 0.75; }
     .nav-links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 36px;
-      list-style: none;
+      display: flex; align-items: center; justify-content: center;
+      gap: 36px; list-style: none;
     }
     .nav-links a {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.65);
+      font-size: 13px; font-weight: 400; letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.6);
       transition: color 0.2s;
       white-space: nowrap;
     }
     .nav-links a:hover { color: var(--white); }
-
-    /* CTA — outlined so it's always visible over video */
     .nav-cta-wrap { display: flex; justify-content: flex-end; }
     .nav-btn {
       display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--white);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--white);
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.5);
       padding: 10px 22px;
-      text-decoration: none;
       transition: background 0.25s, border-color 0.25s, color 0.25s;
       white-space: nowrap;
     }
-    .nav-btn:hover {
-      background: var(--white);
-      border-color: var(--white);
-      color: var(--black);
-    }
-
-    /* hamburger */
+    .nav-btn:hover { background: var(--white); border-color: var(--white); color: var(--black); }
     .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-      border: none;
-      padding: 6px;
-      cursor: pointer;
-      z-index: 10;
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; padding: 6px; cursor: pointer; z-index: 10;
     }
     .hamburger span {
       display: block; width: 24px; height: 1.5px;
@@ -180,271 +159,151 @@
     .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-    /* ── Tablet (≤1024px): tighten gaps ── */
     @media (max-width: 1024px) {
       .nav-inner { padding: 0 32px; gap: 20px; }
       .nav-links { gap: 24px; }
       .nav-links a { font-size: 12px; }
     }
-
-    /* ── Mobile/tablet (≤768px): hamburger menu ── */
     @media (max-width: 768px) {
       .nav-inner { padding: 0 20px; grid-template-columns: auto 1fr auto; }
       .hamburger { display: flex; }
       .nav-cta-wrap { display: none; }
       .nav-links {
-        display: none;
-        position: fixed;
+        display: none; position: fixed;
         top: var(--nav-h); left: 0; right: 0; bottom: 0;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 0;
-        background: rgba(0,0,0,0.97);
-        padding: 8px 0 32px;
-        overflow-y: auto;
+        flex-direction: column; align-items: flex-start; justify-content: flex-start;
+        gap: 0; background: rgba(0,0,0,0.97);
+        padding: 8px 0 32px; overflow-y: auto;
       }
       .nav-links.open { display: flex; }
       .nav-links li { width: 100%; }
       .nav-links a {
-        display: block;
-        padding: 18px 24px;
-        font-size: 18px;
-        font-weight: 300;
+        display: block; padding: 18px 24px;
+        font-size: 18px; font-weight: 300;
         color: rgba(255,255,255,0.75);
         border-bottom: 1px solid rgba(255,255,255,0.06);
       }
-      /* CTA inside mobile menu */
       .nav-links .mobile-cta {
-        margin: 24px 24px 0;
-        display: inline-block;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--white);
-        border: 1px solid rgba(255,255,255,0.4);
-        padding: 14px 28px;
+        margin: 24px 24px 0; display: inline-block;
+        font-size: 13px; font-weight: 600; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--white);
+        border: 1px solid rgba(255,255,255,0.4); padding: 14px 28px;
         border-bottom: 1px solid rgba(255,255,255,0.4) !important;
       }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       HERO — cinematic full-viewport
-    ═══════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
     #hero {
       position: relative;
-      height: 100vh;
-      min-height: 680px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
-      background: var(--black);
+      height: 100vh; min-height: 680px;
+      display: flex; flex-direction: column; justify-content: center;
+      overflow: hidden; background: var(--black);
     }
-
-    /* full-bleed video background */
     .hero-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
       pointer-events: none;
     }
-
-    /* gradient overlays */
-    /* overall dark veil so video never overpowers text */
     .hero-overlay-veil {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: rgba(0,0,0,0.45);
       pointer-events: none;
     }
     .hero-overlay-bottom {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 72%;
+      position: absolute; bottom: 0; left: 0; right: 0; height: 72%;
       background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.75) 40%, transparent 100%);
       pointer-events: none;
     }
     .hero-overlay-left {
-      position: absolute;
-      top: 0; left: 0;
-      width: 65%;
-      height: 100%;
+      position: absolute; top: 0; left: 0; width: 65%; height: 100%;
       background: linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 65%, transparent 100%);
       pointer-events: none;
     }
-
-    /* hero content — vertically centered, not pinned to bottom */
     .hero-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex: 1;
-      padding: var(--nav-h) 7vw 80px;
-      max-width: 880px;
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; justify-content: center;
+      flex: 1; padding: var(--nav-h) 7vw 80px; max-width: 880px;
     }
     .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
-      opacity: 0;
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 32px; opacity: 0;
       animation: fadeUp 1s 0.2s forwards;
     }
     .hero-tag::before {
-      content: '';
-      width: 36px; height: 1px;
-      background: var(--gold);
-      flex-shrink: 0;
+      content: ''; width: 36px; height: 1px;
+      background: var(--gold); flex-shrink: 0;
     }
     .hero-tag span {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--gold);
+      font-size: 11px; font-weight: 500; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gold);
     }
     .hero-h1 {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: clamp(38px, 6vw, 96px);
-      line-height: 1.03;
-      letter-spacing: -0.03em;
-      color: var(--white);
-      /* text-shadow keeps it legible over any video frame */
+      line-height: 1.03; letter-spacing: -0.03em; color: var(--white);
       text-shadow: 0 2px 40px rgba(0,0,0,0.5);
-      margin-bottom: 24px;
-      opacity: 0;
+      margin-bottom: 24px; opacity: 0;
       animation: fadeUp 1s 0.35s forwards;
     }
-    .hero-h1 em {
-      font-style: normal;
-      color: var(--gold);
-    }
+    .hero-h1 em { font-style: normal; color: var(--gold); }
     .hero-sub {
-      font-size: clamp(15px, 1.5vw, 20px);
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 48px;
-      max-width: 520px;
-      opacity: 0;
-      animation: fadeUp 1s 0.5s forwards;
+      font-size: clamp(15px, 1.5vw, 20px); font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,0.6); margin-bottom: 48px; max-width: 520px;
+      opacity: 0; animation: fadeUp 1s 0.5s forwards;
     }
     .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 1s 0.65s forwards;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 1s 0.65s forwards;
     }
-
-    /* Primary CTA — solid white, black text, always readable */
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--black);
-      background: var(--white);
-      padding: 16px 36px;
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--black);
+      background: var(--white); padding: 16px 36px;
       border: 1px solid var(--white);
       transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.2s;
     }
-    .btn-primary:hover {
-      background: transparent;
-      color: var(--white);
-      transform: translateY(-2px);
-    }
-
-    /* Secondary CTA — outlined, white border, white text */
+    .btn-primary:hover { background: transparent; color: var(--white); transform: translateY(-2px); }
     .btn-outline-hero {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--white);
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.45);
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--white);
+      background: transparent; border: 1px solid rgba(255,255,255,0.45);
       padding: 16px 32px;
       transition: border-color 0.25s, background 0.25s, transform 0.2s;
     }
-    .btn-outline-hero:hover {
-      border-color: var(--white);
-      background: rgba(255,255,255,0.08);
-      transform: translateY(-2px);
-    }
-
-    /* hero scroll indicator */
+    .btn-outline-hero:hover { border-color: var(--white); background: rgba(255,255,255,0.08); transform: translateY(-2px); }
     .hero-scroll {
-      position: absolute;
-      bottom: 36px; right: 48px;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      opacity: 0;
-      animation: fadeIn 1s 1.4s forwards;
+      position: absolute; bottom: 36px; right: 48px; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      opacity: 0; animation: fadeIn 1s 1.4s forwards;
     }
     .hero-scroll span {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
+      font-size: 9px; font-weight: 500; letter-spacing: 0.28em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
       writing-mode: vertical-rl;
     }
     .scroll-line {
-      width: 1px;
-      height: 56px;
+      width: 1px; height: 56px;
       background: linear-gradient(to bottom, rgba(255,255,255,0.35), transparent);
       animation: scrollPulse 2.2s ease-in-out infinite;
     }
     @keyframes scrollPulse {
-      0%, 100% { opacity: 0.4; transform: scaleY(1); transform-origin: top; }
-      50%       { opacity: 1;   transform: scaleY(0.5); transform-origin: top; }
+      0%,100% { opacity: 0.4; transform: scaleY(1); transform-origin: top; }
+      50%      { opacity: 1;   transform: scaleY(0.5); transform-origin: top; }
     }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(28px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-
-    /* ── Large screens (≥1440px) ── */
-    @media (min-width: 1440px) {
-      .hero-content { padding-left: 120px; }
-    }
-
-    /* ── Laptop (≤1280px) ── */
-    @media (max-width: 1280px) {
-      .hero-content { padding: var(--nav-h) 5vw 72px; }
-    }
-
-    /* ── Tablet (≤1024px) ── */
-    @media (max-width: 1024px) {
-      .hero-content { padding: var(--nav-h) 40px 64px; max-width: 720px; }
-      .hero-scroll { right: 32px; }
-    }
-
-    /* ── Mobile (≤768px) ── */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @media (min-width: 1440px) { .hero-content { padding-left: 120px; } }
+    @media (max-width: 1280px) { .hero-content { padding: var(--nav-h) 5vw 72px; } }
+    @media (max-width: 1024px) { .hero-content { padding: var(--nav-h) 40px 64px; max-width: 720px; } .hero-scroll { right: 32px; } }
     @media (max-width: 768px) {
       #hero { min-height: 100svh; }
       .hero-content { padding: calc(var(--nav-h) + 20px) 24px 56px; max-width: 100%; }
@@ -452,56 +311,85 @@
       .btn-primary, .btn-outline-hero { padding: 14px 24px; font-size: 11px; }
       .hero-scroll { display: none; }
     }
-
-    /* ── Small mobile (≤390px) ── */
     @media (max-width: 390px) {
       .hero-actions { flex-direction: column; align-items: flex-start; }
       .btn-primary, .btn-outline-hero { width: 100%; justify-content: center; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       STATS TICKER
-    ═══════════════════════════════════════════════════════════ */
-    .stats-bar {
+    /* ══════════════════════════════════════════
+       TRUST STRIP
+    ══════════════════════════════════════════ */
+    .trust-strip {
+      background: var(--off-black);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      background: var(--off-black);
+      padding: 28px 0;
+      overflow: hidden;
+    }
+    .trust-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: flex; align-items: center; gap: 0;
+    }
+    .trust-label {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.2);
+      white-space: nowrap; margin-right: 48px; flex-shrink: 0;
+    }
+    .trust-brands {
+      display: flex; align-items: center;
+      gap: 0; flex: 1; overflow: hidden;
+    }
+    .trust-brand {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 0 32px;
+      border-left: 1px solid var(--border);
+    }
+    .trust-brand:last-child { border-right: 1px solid var(--border); }
+    .trust-brand span {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,0.18);
+      white-space: nowrap;
+      transition: color 0.3s;
+    }
+    .trust-brand:hover span { color: rgba(255,255,255,0.4); }
+    @media (max-width: 1024px) { .trust-inner { padding: 0 32px; } .trust-brand { padding: 0 20px; } }
+    @media (max-width: 768px) {
+      .trust-inner { padding: 0 24px; }
+      .trust-label { display: none; }
+      .trust-brands { gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; }
+      .trust-brands::-webkit-scrollbar { display: none; }
+      .trust-brand { flex-shrink: 0; padding: 0 24px; scroll-snap-align: start; }
+    }
+
+    /* ══════════════════════════════════════════
+       STATS BAR
+    ══════════════════════════════════════════ */
+    .stats-bar {
+      border-bottom: 1px solid var(--border);
+      background: var(--dark-3);
     }
     .stats-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
     }
     .stat-cell {
-      padding: 40px 0;
-      border-right: 1px solid var(--border);
-      padding-left: 32px;
-      transition: background 0.3s;
+      padding: 44px 0; border-right: 1px solid var(--border);
+      padding-left: 36px; transition: background 0.3s;
     }
     .stat-cell:first-child { padding-left: 0; border-left: none; }
     .stat-cell:last-child { border-right: none; }
     .stat-cell:hover { background: rgba(255,255,255,0.02); }
     .stat-n {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(32px, 3.5vw, 48px);
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1;
-      margin-bottom: 8px;
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 800; color: var(--white); line-height: 1; margin-bottom: 10px;
     }
-    .stat-n span { color: var(--gold); }
+    .stat-n .gold { color: var(--gold); }
     .stat-l {
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      color: var(--dimmer);
-      text-transform: uppercase;
+      font-size: 11px; font-weight: 400; letter-spacing: 0.12em;
+      color: var(--dimmer); text-transform: uppercase;
     }
-    @media (max-width: 1024px) {
-      .stats-inner { padding: 0 32px; }
-    }
+    @media (max-width: 1024px) { .stats-inner { padding: 0 32px; } }
     @media (max-width: 768px) {
       .stats-inner { grid-template-columns: repeat(2, 1fr); padding: 0 24px; }
       .stat-cell { padding: 28px 0 28px 16px; }
@@ -510,646 +398,834 @@
       .stat-cell:nth-child(3) { border-left: none; padding-left: 0; border-right: 1px solid var(--border); }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       INTRO / MANIFESTO SECTION
-    ═══════════════════════════════════════════════════════════ */
-    #intro {
+    /* ══════════════════════════════════════════
+       PAIN POINTS
+    ══════════════════════════════════════════ */
+    #pain {
       padding: 140px 0;
+      background: var(--black);
       border-bottom: 1px solid var(--border);
     }
-    .intro-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 100px;
-      align-items: center;
+    .pain-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
     }
-    .intro-left .label { margin-bottom: 20px; }
-    .intro-left h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(28px, 3vw, 44px);
-      font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      color: var(--white);
-    }
-    .intro-right p {
-      font-size: clamp(17px, 1.6vw, 20px);
-      font-weight: 300;
-      line-height: 1.75;
-      color: var(--dim);
-      margin-bottom: 24px;
-    }
-    .intro-right p:last-child { margin-bottom: 0; }
-    @media (max-width: 1024px) {
-      .intro-inner { gap: 60px; padding: 0 32px; }
-      #intro { padding: 100px 0; }
-    }
-    @media (max-width: 768px) {
-      .intro-inner { grid-template-columns: 1fr; gap: 32px; padding: 0 24px; }
-      #intro { padding: 72px 0; }
-    }
-
-    /* ═══════════════════════════════════════════════════════════
-       PRODUCT SECTION
-    ═══════════════════════════════════════════════════════════ */
-    #product {
-      padding: 140px 0;
-      background: var(--off-black);
-      border-bottom: 1px solid var(--border);
-    }
-    .product-header {
-      max-width: 1200px;
-      margin: 0 auto 80px;
-      padding: 0 48px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 40px;
-    }
-    .product-header-left .label { margin-bottom: 16px; }
-    .product-header-left h2 {
+    .pain-header { margin-bottom: 72px; }
+    .pain-header h2 {
       font-family: 'Syne', sans-serif;
       font-size: clamp(32px, 4vw, 56px);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.025em;
-      color: var(--white);
+      font-weight: 800; line-height: 1.08; letter-spacing: -0.025em;
+      color: var(--white); max-width: 640px;
     }
-    .product-header-right {
-      max-width: 340px;
-      flex-shrink: 0;
+    .pain-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
     }
-    .product-header-right p {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.7;
+    .pain-card {
+      background: var(--off-black);
+      padding: 48px 44px;
+      border-left: 3px solid transparent;
+      position: relative; overflow: hidden;
+      transition: background 0.35s, border-color 0.35s;
+    }
+    .pain-card:hover { background: var(--dark-3); border-left-color: var(--gold); }
+    .pain-card::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 120px; height: 120px;
+      background: radial-gradient(ellipse at top right, rgba(200,168,75,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pain-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .pain-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px; font-weight: 700; line-height: 1.2;
+      color: var(--white); margin-bottom: 14px; letter-spacing: -0.01em;
+    }
+    .pain-desc {
+      font-size: 14px; font-weight: 300; line-height: 1.75;
       color: var(--dim);
     }
-
-    /* product layout */
-    .product-body {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      border: 1px solid var(--border);
-    }
-
-    /* left — big image */
-    .product-img-col {
-      position: relative;
-      border-right: 1px solid var(--border);
-      min-height: 620px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--dark);
-      overflow: hidden;
-    }
-    .product-img-col::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 40% 35%, rgba(200,168,75,0.07) 0%, transparent 60%);
-    }
-    .product-img-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      z-index: 1;
-      position: relative;
-    }
-    .product-img-placeholder .pi-icon { font-size: 120px; filter: opacity(0.25); }
-    .product-img-placeholder .pi-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: rgba(200,168,75,0.35);
-    }
-    /* scan line on product image */
-    .product-img-col .scan-line {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(200,168,75,0.5), transparent);
-      animation: scan 4s ease-in-out infinite 1s;
-    }
-
-    /* product code badge */
-    .product-sku {
-      position: absolute;
-      bottom: 0; left: 0;
-      padding: 10px 20px;
-      border-top: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      background: var(--off-black);
-    }
-    .product-sku span {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--dimmer);
-    }
-
-    /* right — specs */
-    .product-info-col {
-      padding: 56px 56px 56px;
-    }
-    .product-name-row {
-      margin-bottom: 40px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid var(--border);
-    }
-    .product-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
-    }
-    .product-subtitle { font-size: 13px; color: var(--dimmer); letter-spacing: 0.08em; text-transform: uppercase; }
-
-    /* specs */
-    .specs-group { margin-bottom: 36px; }
-    .specs-group-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dimmer);
-      margin-bottom: 16px;
-    }
-    .spec-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .spec-row:first-of-type { border-top: 1px solid var(--border); }
-    .spec-key { font-size: 13px; font-weight: 400; color: var(--dimmer); }
-    .spec-val { font-size: 13px; font-weight: 500; color: var(--white); text-align: right; }
-
-    /* features */
-    .features-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 36px; }
-    .feat-item { display: flex; align-items: flex-start; gap: 16px; }
-    .feat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-      min-width: 24px;
-      padding-top: 2px;
-    }
-    .feat-text { font-size: 14px; font-weight: 300; color: var(--dim); line-height: 1.6; }
-
-    @media (max-width: 1024px) {
-      .product-header { padding: 0 32px; }
-      .product-body { margin: 0 32px; }
-      .product-info-col { padding: 44px 40px; }
-    }
+    @media (max-width: 1024px) { .pain-inner { padding: 0 32px; } #pain { padding: 100px 0; } }
     @media (max-width: 768px) {
-      .product-body { grid-template-columns: 1fr; margin: 0 24px; }
-      .product-img-col { min-height: 300px; border-right: none; border-bottom: 1px solid var(--border); }
-      .product-info-col { padding: 32px 24px; }
-      .product-header { flex-direction: column; align-items: flex-start; padding: 0 24px; gap: 16px; }
-      .product-header-right { max-width: 100%; }
-      #product { padding: 72px 0; }
+      .pain-grid { grid-template-columns: 1fr; }
+      .pain-card { padding: 36px 28px; }
+      .pain-inner { padding: 0 24px; }
+      #pain { padding: 72px 0; }
+      .pain-header { margin-bottom: 48px; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       SERVICES
-    ═══════════════════════════════════════════════════════════ */
-    #services {
+    /* ══════════════════════════════════════════
+       SOLUTION
+    ══════════════════════════════════════════ */
+    #solution {
       padding: 140px 0;
+      background: var(--off-black);
       border-bottom: 1px solid var(--border);
     }
-    .services-header {
-      max-width: 1200px;
-      margin: 0 auto 72px;
-      padding: 0 48px;
+    .solution-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
     }
-    .services-header .label { margin-bottom: 16px; }
-    .services-header h2 {
+    .solution-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+      color: var(--white); margin-bottom: 28px;
+    }
+    .solution-left h2 em { font-style: normal; color: var(--gold); }
+    .solution-left p {
+      font-size: 16px; font-weight: 300; line-height: 1.75;
+      color: var(--dim); margin-bottom: 36px; max-width: 440px;
+    }
+    .solution-left .btn-demo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--black);
+      background: var(--gold); border: 1px solid var(--gold);
+      padding: 14px 32px;
+      transition: background 0.25s, color 0.25s, transform 0.2s;
+    }
+    .solution-left .btn-demo:hover { background: transparent; color: var(--gold); transform: translateY(-2px); }
+    .solution-panel {
+      border: 1px solid var(--border-md);
+      background: var(--dark);
+      position: relative; overflow: hidden;
+    }
+    .solution-panel::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+    .sol-item {
+      display: flex; gap: 20px; padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.25s;
+    }
+    .sol-item:last-child { border-bottom: none; }
+    .sol-item:hover { background: rgba(200,168,75,0.03); }
+    .sol-check {
+      width: 20px; height: 20px; flex-shrink: 0;
+      border: 1px solid rgba(200,168,75,0.4);
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .sol-check svg { width: 10px; height: 10px; }
+    .sol-text h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px; font-weight: 700; color: var(--white);
+      margin-bottom: 4px; letter-spacing: -0.01em;
+    }
+    .sol-text p {
+      font-size: 13px; font-weight: 300; line-height: 1.6; color: var(--dimmer);
+    }
+    @media (max-width: 1024px) { .solution-inner { padding: 0 32px; gap: 56px; } #solution { padding: 100px 0; } }
+    @media (max-width: 768px) {
+      .solution-inner { grid-template-columns: 1fr; gap: 48px; padding: 0 24px; }
+      .solution-left p { max-width: 100%; }
+      #solution { padding: 72px 0; }
+    }
+
+    /* ══════════════════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════════════════ */
+    #how {
+      padding: 140px 0;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+    }
+    .how-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+    .how-header { margin-bottom: 80px; }
+    .how-header h2 {
       font-family: 'Syne', sans-serif;
       font-size: clamp(32px, 4vw, 52px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.025em;
-      color: var(--white);
-      max-width: 520px;
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+      color: var(--white); max-width: 560px;
     }
-    .services-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid var(--border);
-      border-left: 1px solid var(--border);
-    }
-    .svc-card {
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 48px 40px;
+    .how-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr);
       position: relative;
-      overflow: hidden;
-      transition: background 0.35s;
     }
-    .svc-card::after {
+    .how-steps::before {
       content: '';
       position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--gold);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      top: 28px; left: calc(12.5% + 16px); right: calc(12.5% + 16px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold) 0%, rgba(200,168,75,0.2) 100%);
     }
-    .svc-card:hover { background: rgba(255,255,255,0.02); }
-    .svc-card:hover::after { transform: scaleX(1); }
-    .svc-num {
+    .how-step { padding: 0 24px 0 0; position: relative; }
+    .how-step:last-child { padding-right: 0; }
+    .step-num-wrap {
+      display: flex; align-items: center; margin-bottom: 32px;
+    }
+    .step-num {
+      width: 56px; height: 56px; flex-shrink: 0;
+      border: 1px solid var(--border-md);
+      background: var(--off-black);
+      display: flex; align-items: center; justify-content: center;
       font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.2em;
-      margin-bottom: 32px;
+      font-size: 14px; font-weight: 800; color: var(--gold);
+      letter-spacing: 0.05em;
+      transition: border-color 0.3s, background 0.3s;
     }
-    .svc-icon { font-size: 32px; margin-bottom: 20px; display: block; line-height: 1; }
-    .svc-title {
+    .how-step:hover .step-num {
+      border-color: rgba(200,168,75,0.5);
+      background: rgba(200,168,75,0.06);
+    }
+    .step-title {
       font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 14px;
-      letter-spacing: -0.01em;
+      font-size: 17px; font-weight: 700; color: var(--white);
+      margin-bottom: 12px; letter-spacing: -0.01em;
     }
-    .svc-desc { font-size: 14px; font-weight: 300; color: var(--dim); line-height: 1.7; }
-    @media (max-width: 1024px) {
-      .services-grid { padding: 0 32px; }
-      .services-header { padding: 0 32px; }
-      #services { padding: 100px 0; }
-    }
+    .step-desc { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.7; }
+    @media (max-width: 1024px) { .how-inner { padding: 0 32px; } #how { padding: 100px 0; } }
     @media (max-width: 768px) {
-      .services-grid { grid-template-columns: 1fr; padding: 0 24px; }
-      .services-header { padding: 0 24px; }
-      .svc-card { padding: 36px 28px; }
-      #services { padding: 72px 0; }
+      .how-steps { grid-template-columns: 1fr; gap: 0; }
+      .how-steps::before { display: none; }
+      .how-step {
+        padding: 0 0 0 40px; margin-bottom: 0;
+        border-left: 1px solid var(--border);
+        padding-bottom: 40px;
+      }
+      .how-step:last-child { padding-bottom: 0; }
+      .step-num-wrap { margin-bottom: 20px; }
+      .step-num { width: 44px; height: 44px; margin-left: -22px; font-size: 12px; }
+      .how-inner { padding: 0 24px; }
+      .how-header { margin-bottom: 56px; }
+      #how { padding: 72px 0; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       ABOUT / TEAM
-    ═══════════════════════════════════════════════════════════ */
-    #about {
+    /* ══════════════════════════════════════════
+       FEATURES
+    ══════════════════════════════════════════ */
+    #features {
       padding: 140px 0;
       background: var(--off-black);
       border-bottom: 1px solid var(--border);
     }
-    .about-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
+    .features-header {
+      max-width: 1200px; margin: 0 auto 72px; padding: 0 48px;
     }
-    .about-top {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 100px;
-      margin-bottom: 100px;
-      padding-bottom: 80px;
-      border-bottom: 1px solid var(--border);
-    }
-    .about-top-left .label { margin-bottom: 16px; }
-    .about-top-left h2 {
+    .features-header h2 {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(28px, 3vw, 44px);
-      font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      color: var(--white);
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+      color: var(--white); max-width: 600px;
     }
-    .about-top-right { display: flex; flex-direction: column; justify-content: center; }
-    .about-mission {
-      font-size: clamp(17px, 1.6vw, 21px);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.7;
-      color: var(--dim);
-      border-left: 2px solid var(--gold);
-      padding-left: 28px;
+    .features-grid {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border); border-left: 1px solid var(--border);
+    }
+    .feat-card {
+      border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 44px 36px; position: relative; overflow: hidden;
+      transition: background 0.35s;
+    }
+    .feat-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .feat-card:hover { background: rgba(200,168,75,0.02); }
+    .feat-card:hover::after { transform: scaleX(1); }
+    .feat-icon {
+      width: 44px; height: 44px; margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border-md);
+      background: rgba(200,168,75,0.06);
+      transition: border-color 0.3s;
+    }
+    .feat-card:hover .feat-icon { border-color: rgba(200,168,75,0.35); }
+    .feat-icon svg { width: 20px; height: 20px; }
+    .feat-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px; font-weight: 700; color: var(--white);
+      margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .feat-desc { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.7; }
+    @media (max-width: 1024px) { .features-grid { padding: 0 32px; } .features-header { padding: 0 32px; } #features { padding: 100px 0; } }
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; padding: 0 24px; }
+      .features-header { padding: 0 24px; }
+      .feat-card { padding: 32px 24px; }
+      #features { padding: 72px 0; }
     }
 
-    /* team */
-    .team-label { margin-bottom: 40px; }
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid var(--border);
-      border-left: 1px solid var(--border);
-    }
-    .team-card {
-      border-right: 1px solid var(--border);
+    /* ══════════════════════════════════════════
+       ROI
+    ══════════════════════════════════════════ */
+    #roi {
+      padding: 140px 0;
+      background: var(--black);
       border-bottom: 1px solid var(--border);
+    }
+    .roi-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+    .roi-header { margin-bottom: 72px; }
+    .roi-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+      color: var(--white); max-width: 560px;
+    }
+    .roi-tiles {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 80px;
+    }
+    .roi-tile {
+      background: var(--off-black);
       padding: 44px 36px;
       transition: background 0.3s;
     }
-    .team-card:hover { background: rgba(255,255,255,0.02); }
-    .avatar {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: var(--dark-2);
-      border: 1px solid var(--border-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin-bottom: 24px;
-      transition: border-color 0.3s;
-    }
-    .team-card:hover .avatar { border-color: rgba(200,168,75,0.4); }
-    .team-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 5px;
-    }
-    .team-role {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 16px;
-    }
-    .team-bio { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.65; }
-
-    @media (max-width: 1024px) {
-      .about-inner { padding: 0 32px; }
-      .about-top { gap: 60px; }
-      #about { padding: 100px 0; }
-    }
-    @media (max-width: 768px) {
-      .about-top { grid-template-columns: 1fr; gap: 36px; margin-bottom: 60px; padding-bottom: 60px; }
-      .team-grid { grid-template-columns: 1fr; }
-      .team-card { padding: 32px 24px; }
-      .about-inner { padding: 0 24px; }
-      #about { padding: 72px 0; }
-    }
-
-    /* ═══════════════════════════════════════════════════════════
-       TESTIMONIALS
-    ═══════════════════════════════════════════════════════════ */
-    #testimonials {
-      padding: 140px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .testi-header {
-      max-width: 1200px;
-      margin: 0 auto 72px;
-      padding: 0 48px;
-    }
-    .testi-header .label { margin-bottom: 16px; }
-    .testi-header h2 {
+    .roi-tile:hover { background: var(--dark-3); }
+    .roi-num {
       font-family: 'Syne', sans-serif;
       font-size: clamp(28px, 3vw, 44px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--white);
+      font-weight: 800; color: var(--gold);
+      line-height: 1; margin-bottom: 12px;
     }
-    .testi-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
+    .roi-label {
+      font-size: 13px; font-weight: 300; color: var(--dim);
+      line-height: 1.55;
     }
-    .testi-card {
-      background: var(--black);
-      padding: 48px 40px;
-      transition: background 0.3s;
+    .roi-body {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
     }
-    .testi-card:hover { background: var(--off-black); }
-    .testi-q-mark {
+    .roi-copy h3 {
       font-family: 'Syne', sans-serif;
-      font-size: 64px;
-      font-weight: 800;
-      color: rgba(200,168,75,0.15);
-      line-height: 0.8;
-      margin-bottom: 24px;
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 700; line-height: 1.2; letter-spacing: -0.02em;
+      color: var(--white); margin-bottom: 20px;
     }
-    .testi-quote {
-      font-size: 15px;
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.75;
-      color: var(--dim);
-      margin-bottom: 32px;
+    .roi-copy p {
+      font-size: 15px; font-weight: 300; line-height: 1.75; color: var(--dim);
     }
-    .testi-author {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
+    .roi-outcomes { display: flex; flex-direction: column; gap: 0; }
+    .roi-outcome {
+      display: flex; align-items: flex-start; gap: 20px;
+      padding: 20px 0; border-bottom: 1px solid var(--border);
     }
-    @media (max-width: 1024px) {
-      .testi-grid { padding: 0 32px; }
-      .testi-header { padding: 0 32px; }
-      #testimonials { padding: 100px 0; }
+    .roi-outcome:first-child { border-top: 1px solid var(--border); }
+    .roi-outcome-icon {
+      width: 32px; height: 32px; flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
     }
+    .roi-outcome-icon svg { width: 14px; height: 14px; }
+    .roi-outcome-text { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.6; }
+    .roi-outcome-text strong { color: var(--white); font-weight: 500; }
+    @media (max-width: 1024px) { .roi-inner { padding: 0 32px; } #roi { padding: 100px 0; } .roi-body { gap: 48px; } }
     @media (max-width: 768px) {
-      .testi-grid { grid-template-columns: 1fr; padding: 0 24px; }
-      .testi-header { padding: 0 24px; }
-      .testi-card { padding: 36px 28px; }
-      #testimonials { padding: 72px 0; }
+      .roi-tiles { grid-template-columns: repeat(2, 1fr); }
+      .roi-tile { padding: 28px 24px; }
+      .roi-body { grid-template-columns: 1fr; gap: 40px; }
+      .roi-inner { padding: 0 24px; }
+      .roi-header { margin-bottom: 48px; }
+      #roi { padding: 72px 0; }
     }
 
-    /* ═══════════════════════════════════════════════════════════
-       CONTACT
-    ═══════════════════════════════════════════════════════════ */
-    #contact {
+    /* ══════════════════════════════════════════
+       USE CASES
+    ══════════════════════════════════════════ */
+    #usecases {
       padding: 140px 0;
       background: var(--off-black);
       border-bottom: 1px solid var(--border);
     }
-    .contact-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 48px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 100px;
+    .usecases-header {
+      max-width: 1200px; margin: 0 auto 72px; padding: 0 48px;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
     }
-    .contact-left .label { margin-bottom: 16px; }
+    .usecases-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+      color: var(--white);
+    }
+    .usecases-header p {
+      font-size: 14px; font-weight: 300; color: var(--dim);
+      line-height: 1.65; max-width: 320px; flex-shrink: 0;
+    }
+    .usecases-grid {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .uc-card {
+      background: var(--dark-3);
+      padding: 40px 36px; position: relative; overflow: hidden;
+      transition: background 0.3s;
+    }
+    .uc-card:hover { background: var(--dark-2); }
+    .uc-icon {
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+    .uc-icon svg { width: 28px; height: 28px; }
+    .uc-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px; font-weight: 700; color: var(--white);
+      margin-bottom: 8px; letter-spacing: -0.01em;
+    }
+    .uc-desc { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.65; }
+    @media (max-width: 1024px) { .usecases-grid { padding: 0 32px; } .usecases-header { padding: 0 32px; } #usecases { padding: 100px 0; } }
+    @media (max-width: 768px) {
+      .usecases-grid { grid-template-columns: 1fr; padding: 0 24px; }
+      .usecases-header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 0 24px; }
+      .usecases-header p { max-width: 100%; }
+      .uc-card { padding: 32px 24px; }
+      #usecases { padding: 72px 0; }
+    }
+
+    /* ══════════════════════════════════════════
+       PRODUCT SHOWCASE
+    ══════════════════════════════════════════ */
+    #product {
+      padding: 140px 0;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+    }
+    .product-header {
+      max-width: 1200px; margin: 0 auto 72px; padding: 0 48px;
+    }
+    .product-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 800; line-height: 1.08; letter-spacing: -0.025em;
+      color: var(--white);
+    }
+    .product-header h2 em { font-style: normal; color: var(--gold); }
+    .product-body {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1px solid var(--border);
+    }
+    .product-img-col {
+      position: relative; border-right: 1px solid var(--border);
+      min-height: 640px; display: flex; align-items: center; justify-content: center;
+      background: var(--dark-3); overflow: hidden;
+    }
+    .product-img-col::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 40% 35%, rgba(200,168,75,0.08) 0%, transparent 60%);
+    }
+    /* CSS robot silhouette */
+    .robot-silhouette {
+      position: relative; z-index: 1;
+      width: 160px;
+    }
+    .robot-body {
+      position: relative;
+      width: 160px;
+    }
+    .robot-head {
+      width: 80px; height: 56px; margin: 0 auto;
+      border: 1px solid rgba(200,168,75,0.35);
+      background: rgba(200,168,75,0.04);
+      position: relative; margin-bottom: 4px;
+    }
+    .robot-head::before {
+      content: '';
+      position: absolute; top: 12px; left: 12px; right: 12px; height: 8px;
+      background: linear-gradient(90deg, rgba(200,168,75,0.6), rgba(200,168,75,0.2));
+    }
+    .robot-head::after {
+      content: '';
+      position: absolute; bottom: 12px; left: 20px; right: 20px; height: 1px;
+      background: rgba(200,168,75,0.25);
+    }
+    .robot-neck {
+      width: 32px; height: 12px; margin: 0 auto;
+      background: rgba(200,168,75,0.15); margin-bottom: 4px;
+    }
+    .robot-torso {
+      width: 140px; min-height: 200px; margin: 0 auto;
+      border: 1px solid rgba(200,168,75,0.35);
+      background: rgba(200,168,75,0.03);
+      position: relative; overflow: hidden;
+    }
+    .robot-torso::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,168,75,0.5), transparent);
+    }
+    .robot-shelf {
+      position: absolute; left: 8px; right: 8px; height: 1px;
+      background: rgba(200,168,75,0.2);
+    }
+    .robot-shelf:nth-child(1) { top: 33%; }
+    .robot-shelf:nth-child(2) { top: 66%; }
+    .robot-panel {
+      position: absolute; top: 12px; left: 12px;
+      width: 28px; height: 20px;
+      border: 1px solid rgba(200,168,75,0.25);
+      background: rgba(200,168,75,0.06);
+    }
+    .robot-display {
+      position: absolute; top: 12px; right: 12px;
+      width: 48px; height: 32px;
+      border: 1px solid rgba(200,168,75,0.3);
+      background: rgba(200,168,75,0.08);
+    }
+    .robot-display::before {
+      content: '';
+      position: absolute; inset: 4px;
+      background: linear-gradient(135deg, rgba(200,168,75,0.3) 0%, transparent 100%);
+    }
+    .robot-base {
+      width: 160px; height: 32px; margin: 0 auto;
+      border: 1px solid rgba(200,168,75,0.3);
+      background: rgba(200,168,75,0.06);
+      position: relative;
+    }
+    .robot-base::before {
+      content: '';
+      position: absolute; bottom: -12px; left: 20px; right: 20px; height: 12px;
+      background: rgba(200,168,75,0.04);
+      border: 1px solid rgba(200,168,75,0.15);
+      border-top: none;
+    }
+    .robot-glow {
+      position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+      width: 200px; height: 60px;
+      background: radial-gradient(ellipse, rgba(200,168,75,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    /* scan line */
+    .scan-line {
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,168,75,0.6), transparent);
+      animation: scan 4s ease-in-out infinite;
+    }
+    @keyframes scan {
+      0%   { top: 0%; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    /* corner brackets */
+    .corner { position: absolute; width: 20px; height: 20px; }
+    .corner-tl { top: 16px; left: 16px; border-top: 1px solid rgba(200,168,75,0.4); border-left: 1px solid rgba(200,168,75,0.4); }
+    .corner-tr { top: 16px; right: 16px; border-top: 1px solid rgba(200,168,75,0.4); border-right: 1px solid rgba(200,168,75,0.4); }
+    .corner-bl { bottom: 16px; left: 16px; border-bottom: 1px solid rgba(200,168,75,0.4); border-left: 1px solid rgba(200,168,75,0.4); }
+    .corner-br { bottom: 16px; right: 16px; border-bottom: 1px solid rgba(200,168,75,0.4); border-right: 1px solid rgba(200,168,75,0.4); }
+    .product-sku {
+      position: absolute; bottom: 0; left: 0;
+      padding: 10px 20px; border-top: 1px solid var(--border); border-right: 1px solid var(--border);
+      background: var(--off-black);
+    }
+    .product-sku span {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--dimmer);
+    }
+    .product-info-col { padding: 56px 56px; }
+    .product-name-row { margin-bottom: 36px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
+    .product-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 30px; font-weight: 800; color: var(--white);
+      margin-bottom: 6px; letter-spacing: -0.02em;
+    }
+    .product-subtitle { font-size: 12px; color: var(--dimmer); letter-spacing: 0.1em; text-transform: uppercase; }
+    .specs-group { margin-bottom: 36px; }
+    .specs-group-label {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dimmer); margin-bottom: 16px;
+    }
+    .spec-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 0; border-bottom: 1px solid var(--border);
+    }
+    .spec-row:first-of-type { border-top: 1px solid var(--border); }
+    .spec-key { font-size: 13px; font-weight: 300; color: var(--dimmer); }
+    .spec-val { font-size: 13px; font-weight: 500; color: var(--white); text-align: right; }
+    .product-caps { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+    .cap-row {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .cap-row:first-child { border-top: 1px solid var(--border); }
+    .cap-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.1em; min-width: 24px; padding-top: 1px;
+    }
+    .cap-text { font-size: 13px; font-weight: 300; color: var(--dim); line-height: 1.6; }
+    @media (max-width: 1024px) {
+      .product-header { padding: 0 32px; }
+      .product-body { margin: 0; padding: 0 32px; }
+      .product-info-col { padding: 44px 36px; }
+    }
+    @media (max-width: 768px) {
+      .product-body { grid-template-columns: 1fr; padding: 0 24px; }
+      .product-img-col { min-height: 320px; border-right: none; border-bottom: 1px solid var(--border); }
+      .product-info-col { padding: 32px 24px; }
+      .product-header { padding: 0 24px; margin-bottom: 48px; }
+      #product { padding: 72px 0; }
+    }
+
+    /* ══════════════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════════════ */
+    #testimonials {
+      padding: 140px 0;
+      background: var(--off-black);
+      border-bottom: 1px solid var(--border);
+    }
+    .testi-header {
+      max-width: 1200px; margin: 0 auto 72px; padding: 0 48px;
+    }
+    .testi-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; letter-spacing: -0.025em; color: var(--white);
+    }
+    .testi-grid {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+    }
+    .testi-card {
+      background: var(--black); padding: 52px 44px;
+      transition: background 0.3s; position: relative;
+    }
+    .testi-card:hover { background: var(--dark-3); }
+    .testi-q-mark {
+      font-family: 'Syne', sans-serif; font-size: 80px; font-weight: 800;
+      color: rgba(200,168,75,0.12); line-height: 0.7; margin-bottom: 28px;
+    }
+    .testi-quote {
+      font-size: 15px; font-weight: 300; font-style: italic;
+      line-height: 1.8; color: var(--dim); margin-bottom: 36px;
+    }
+    .testi-divider {
+      width: 32px; height: 1px; background: var(--gold); opacity: 0.4; margin-bottom: 20px;
+    }
+    .testi-author {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .testi-hotel { font-size: 11px; font-weight: 300; color: var(--dimmer); margin-top: 4px; }
+    @media (max-width: 1024px) { .testi-grid { padding: 0 32px; } .testi-header { padding: 0 32px; } #testimonials { padding: 100px 0; } }
+    @media (max-width: 768px) {
+      .testi-grid { grid-template-columns: 1fr; padding: 0 24px; }
+      .testi-header { padding: 0 24px; }
+      .testi-card { padding: 40px 28px; }
+      #testimonials { padding: 72px 0; }
+    }
+
+    /* ══════════════════════════════════════════
+       FAQ
+    ══════════════════════════════════════════ */
+    #faq {
+      padding: 140px 0;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+    .faq-header { margin-bottom: 72px; max-width: 560px; }
+    .faq-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--white);
+    }
+    .faq-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--border); }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; padding: 26px 0; background: none; border: none; color: var(--white);
+      text-align: left; cursor: pointer;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--gold); }
+    .faq-q-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+    .faq-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.25s, background 0.25s, transform 0.35s;
+    }
+    .faq-item.open .faq-icon {
+      border-color: rgba(200,168,75,0.4);
+      background: rgba(200,168,75,0.06);
+      transform: rotate(45deg);
+    }
+    .faq-icon svg { width: 12px; height: 12px; }
+    .faq-a {
+      overflow: hidden; max-height: 0;
+      transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+      opacity: 0;
+    }
+    .faq-item.open .faq-a { max-height: 240px; opacity: 1; }
+    .faq-a-inner {
+      padding: 0 48px 28px 0;
+      font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--dim);
+    }
+    @media (max-width: 1024px) { .faq-inner { padding: 0 32px; } #faq { padding: 100px 0; } }
+    @media (max-width: 768px) { .faq-inner { padding: 0 24px; } #faq { padding: 72px 0; } .faq-a-inner { padding-right: 0; } }
+
+    /* ══════════════════════════════════════════
+       FINAL CTA
+    ══════════════════════════════════════════ */
+    #cta-final {
+      padding: 160px 0;
+      background: var(--off-black);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    #cta-final::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 800px; height: 400px;
+      background: radial-gradient(ellipse, rgba(200,168,75,0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #cta-final::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,168,75,0.3), transparent);
+    }
+    .cta-final-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; position: relative; z-index: 1;
+    }
+    .cta-final-inner h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 5vw, 72px);
+      font-weight: 800; line-height: 1.06; letter-spacing: -0.03em;
+      color: var(--white); margin-bottom: 20px; max-width: 800px;
+    }
+    .cta-final-inner h2 em { font-style: normal; color: var(--gold); }
+    .cta-final-inner p {
+      font-size: clamp(15px, 1.5vw, 18px); font-weight: 300;
+      color: var(--dim); margin-bottom: 56px; max-width: 520px;
+    }
+    .cta-final-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--black);
+      background: var(--gold); border: 1px solid var(--gold);
+      padding: 18px 44px;
+      transition: background 0.25s, color 0.25s, transform 0.2s;
+    }
+    .btn-gold:hover { background: transparent; color: var(--gold); transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; font-weight: 400; letter-spacing: 0.1em;
+      color: var(--dim); transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--white); }
+    @media (max-width: 1024px) { .cta-final-inner { padding: 0 32px; } }
+    @media (max-width: 768px) { .cta-final-inner { padding: 0 24px; } #cta-final { padding: 100px 0; } }
+
+    /* ══════════════════════════════════════════
+       CONTACT
+    ══════════════════════════════════════════ */
+    #contact {
+      padding: 140px 0;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+    }
+    .contact-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 100px;
+    }
     .contact-left h2 {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(32px, 4vw, 54px);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.025em;
-      color: var(--white);
-      margin-bottom: 24px;
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;
+      color: var(--white); margin-bottom: 20px;
     }
-    .contact-left p {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.7;
-      color: var(--dim);
-      margin-bottom: 48px;
+    .contact-left > p {
+      font-size: 15px; font-weight: 300; line-height: 1.7;
+      color: var(--dim); margin-bottom: 48px;
     }
-    .contact-details { display: flex; flex-direction: column; gap: 0; }
+    .contact-details { display: flex; flex-direction: column; }
     .cd-row {
-      display: flex;
-      align-items: baseline;
-      gap: 24px;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; gap: 24px;
+      padding: 18px 0; border-bottom: 1px solid var(--border);
     }
     .cd-row:first-child { border-top: 1px solid var(--border); }
     .cd-key { font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dimmer); min-width: 72px; }
     .cd-val { font-size: 14px; font-weight: 300; color: var(--dim); line-height: 1.6; }
     .cd-val a { color: var(--dim); transition: color 0.2s; }
     .cd-val a:hover { color: var(--white); }
-
-    /* form */
-    .contact-form { }
-    .form-field { margin-bottom: 24px; }
+    .form-field { margin-bottom: 20px; }
     .form-field label {
-      display: block;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--dimmer);
-      margin-bottom: 10px;
+      display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dimmer); margin-bottom: 10px;
     }
-    .form-field input,
-    .form-field textarea {
-      width: 100%;
-      background: var(--dark);
-      border: 1px solid var(--border);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 300;
-      padding: 14px 18px;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
+    .form-field input, .form-field textarea {
+      width: 100%; background: var(--dark); border: 1px solid var(--border);
+      color: var(--white); font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 300; padding: 14px 18px;
+      outline: none; transition: border-color 0.2s, background 0.2s;
       -webkit-appearance: none;
     }
-    .form-field input::placeholder,
-    .form-field textarea::placeholder { color: var(--dimmer); }
-    .form-field input:focus,
-    .form-field textarea:focus {
-      border-color: rgba(200,168,75,0.5);
-      background: var(--dark-2);
+    .form-field input::placeholder, .form-field textarea::placeholder { color: var(--dimmer); }
+    .form-field input:focus, .form-field textarea:focus {
+      border-color: rgba(200,168,75,0.4); background: var(--dark-2);
     }
-    .form-field textarea { resize: vertical; min-height: 130px; }
+    .form-field textarea { resize: vertical; min-height: 120px; }
     .form-submit {
-      width: 100%;
-      background: var(--white);
-      color: var(--black);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border: 1px solid var(--white);
-      padding: 17px;
-      cursor: pointer;
+      width: 100%; background: var(--white); color: var(--black);
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      border: 1px solid var(--white); padding: 17px; cursor: pointer;
       transition: background 0.25s, color 0.25s, transform 0.2s;
     }
     .form-submit:hover { background: transparent; color: var(--white); transform: translateY(-1px); }
+    @media (max-width: 1024px) { .contact-inner { padding: 0 32px; gap: 64px; } #contact { padding: 100px 0; } }
+    @media (max-width: 768px) { .contact-inner { grid-template-columns: 1fr; gap: 48px; padding: 0 24px; } #contact { padding: 72px 0; } }
 
-    @media (max-width: 1024px) {
-      .contact-inner { padding: 0 32px; gap: 64px; }
-      #contact { padding: 100px 0; }
-    }
-    @media (max-width: 768px) {
-      .contact-inner { grid-template-columns: 1fr; gap: 48px; padding: 0 24px; }
-      #contact { padding: 72px 0; }
-    }
-
-    /* ═══════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════
        FOOTER
-    ═══════════════════════════════════════════════════════════ */
+    ══════════════════════════════════════════ */
     footer {
-      background: var(--black);
+      background: var(--off-black);
       border-top: 1px solid var(--border);
     }
     .footer-top {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 64px 48px 48px;
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 80px;
-      align-items: start;
+      max-width: 1200px; margin: 0 auto; padding: 64px 48px 48px;
+      display: grid; grid-template-columns: 1.4fr auto auto auto; gap: 64px; align-items: start;
     }
-    .footer-brand .footer-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: 0.04em;
-      color: var(--white);
-      margin-bottom: 12px;
-    }
-    .footer-brand .footer-logo span { color: var(--gold); }
-    .footer-brand p {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--dimmer);
-      line-height: 1.65;
-      max-width: 280px;
-    }
+    .footer-brand img { height: 32px; width: auto; filter: brightness(0) invert(1); opacity: 0.75; margin-bottom: 16px; }
+    .footer-brand p { font-size: 13px; font-weight: 300; color: var(--dimmer); line-height: 1.65; max-width: 260px; }
     .footer-col h4 {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dimmer);
-      margin-bottom: 20px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--dimmer); margin-bottom: 20px;
     }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .footer-col ul a {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--dim);
-      transition: color 0.2s;
-    }
+    .footer-col ul a { font-size: 13px; font-weight: 300; color: var(--dim); transition: color 0.2s; }
     .footer-col ul a:hover { color: var(--white); }
     .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px 48px 40px;
+      max-width: 1200px; margin: 0 auto; padding: 20px 48px 40px;
       border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
     }
     .footer-copy { font-size: 12px; color: var(--dimmer); letter-spacing: 0.05em; }
     .footer-socials { display: flex; align-items: center; gap: 24px; }
     .footer-socials a { font-size: 12px; color: var(--dimmer); letter-spacing: 0.1em; transition: color 0.2s; }
     .footer-socials a:hover { color: var(--white); }
+    @media (max-width: 1024px) { .footer-top { padding: 48px 32px 36px; gap: 40px; } .footer-bottom { padding: 20px 32px 32px; } }
     @media (max-width: 860px) {
-      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; padding: 48px 24px 36px; }
+      .footer-top { grid-template-columns: 1fr 1fr; padding: 48px 24px 36px; }
       .footer-brand { grid-column: 1 / -1; }
       .footer-bottom { padding: 20px 24px 32px; flex-direction: column; align-items: flex-start; gap: 16px; }
     }
@@ -1157,370 +1233,732 @@
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav id="nav">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        <img src="images/logo.png" alt="Untu AI">
-      </a>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#product">Product</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#contact" class="mobile-cta">Request Demo</a></li>
-      </ul>
-      <div class="nav-cta-wrap">
-        <a href="#contact" class="nav-btn">Request Demo</a>
-      </div>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="images/logo.png" alt="Untu AI">
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#product">Product</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#roi">ROI</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact" class="mobile-cta">Book a Demo</a></li>
+    </ul>
+    <div class="nav-cta-wrap">
+      <a href="#contact" class="nav-btn">Book a Demo</a>
     </div>
-  </nav>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
 
-  <!-- HERO -->
-  <section id="hero">
-    <video class="hero-video" autoplay muted loop playsinline preload="auto">
-      <source src="videos/hero_1.mp4" type="video/mp4">
-    </video>
-    <div class="hero-overlay-veil"></div>
-    <div class="hero-overlay-bottom"></div>
-    <div class="hero-overlay-left"></div>
-
-    <div class="hero-content">
-      <div class="hero-tag"><span>Hotel Service Robotics</span></div>
-      <h1 class="hero-h1">The future of<br>hospitality is<br><em>autonomous.</em></h1>
-      <p class="hero-sub">Untu AI builds service robots that work alongside your team — delivering rooms, guiding guests, and running 24/7 without interruption.</p>
-      <div class="hero-actions">
-        <a href="#contact" class="btn-primary">Request a Demo</a>
-        <a href="#product" class="btn-outline-hero">Explore HotelBot H1 →</a>
-      </div>
+<!-- HERO -->
+<section id="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="videos/hero_1.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay-veil"></div>
+  <div class="hero-overlay-bottom"></div>
+  <div class="hero-overlay-left"></div>
+  <div class="hero-content">
+    <div class="hero-tag"><span>Hotel Service Robotics</span></div>
+    <h1 class="hero-h1">The future of<br>hospitality is<br><em>autonomous.</em></h1>
+    <p class="hero-sub">Untu AI's HotelBot H1 delivers room service, towels, toiletries, and guest requests 24 hours a day — with zero staff time, zero delays, and zero missed orders.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Book a Demo</a>
+      <a href="#product" class="btn-outline-hero">Explore HotelBot H1 →</a>
     </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
 
-    <div class="hero-scroll">
-      <div class="scroll-line"></div>
-      <span>Scroll</span>
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <span class="trust-label">Trusted by</span>
+    <div class="trust-brands">
+      <div class="trust-brand"><span>Marriott Hotels</span></div>
+      <div class="trust-brand"><span>ITC Group</span></div>
+      <div class="trust-brand"><span>Taj Hotels</span></div>
+      <div class="trust-brand"><span>Radisson Blu</span></div>
+      <div class="trust-brand"><span>Lemon Tree</span></div>
+      <div class="trust-brand"><span>OYO Premium</span></div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- STATS -->
-  <div class="stats-bar">
-    <div class="stats-inner">
-      <div class="stat-cell sr sr-d1">
-        <div class="stat-n"><span data-count="50">0</span>+</div>
-        <div class="stat-l">Hotel Partners</div>
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-cell sr sr-d1">
+      <div class="stat-n"><span data-count="50">0</span><span class="gold">+</span></div>
+      <div class="stat-l">Hotel Deployments</div>
+    </div>
+    <div class="stat-cell sr sr-d2">
+      <div class="stat-n"><span data-count="10000">0</span><span class="gold">+</span></div>
+      <div class="stat-l">Deliveries Completed</div>
+    </div>
+    <div class="stat-cell sr sr-d3">
+      <div class="stat-n">98<span class="gold" style="font-size:0.6em">%</span></div>
+      <div class="stat-l">On-Time Delivery Rate</div>
+    </div>
+    <div class="stat-cell sr sr-d4">
+      <div class="stat-n">24<span class="gold" style="font-size:0.55em">/7</span></div>
+      <div class="stat-l">Operational — Always</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<section id="pain">
+  <div class="pain-inner">
+    <div class="pain-header sr">
+      <div class="gold-label">The Problem</div>
+      <h2>Your staff shouldn't be running deliveries.</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card sr sr-d1">
+        <p class="pain-num">01</p>
+        <h3 class="pain-title">Late-night requests pull your best people away from guests</h3>
+        <p class="pain-desc">At 2am, a guest needs extra towels. Someone has to stop what they're doing — or worse, you're understaffed and the guest waits 40 minutes. Neither outcome is acceptable.</p>
       </div>
-      <div class="stat-cell sr sr-d2">
-        <div class="stat-n"><span data-count="10000">0</span>+</div>
-        <div class="stat-l">Room Deliveries</div>
+      <div class="pain-card sr sr-d2">
+        <p class="pain-num">02</p>
+        <h3 class="pain-title">Delivery delays are showing up in your reviews</h3>
+        <p class="pain-desc">A single slow room service delivery can cost you a 5-star rating. Guests don't separate "slow kitchen" from "slow service" — they rate the whole experience.</p>
       </div>
-      <div class="stat-cell sr sr-d3">
-        <div class="stat-n">98<span style="font-size:0.6em;color:var(--gold)">%</span></div>
-        <div class="stat-l">Guest Satisfaction</div>
+      <div class="pain-card sr sr-d3">
+        <p class="pain-num">03</p>
+        <h3 class="pain-title">Labor costs are rising while margins compress</h3>
+        <p class="pain-desc">Wages are up. Occupancy is unpredictable. Scheduling enough staff for delivery runs 24 hours a day is expensive, inefficient, and increasingly hard to justify.</p>
       </div>
-      <div class="stat-cell sr sr-d4">
-        <div class="stat-n">24<span style="font-size:0.55em;color:var(--gold)">/7</span></div>
-        <div class="stat-l">Operational Uptime</div>
+      <div class="pain-card sr sr-d4">
+        <p class="pain-num">04</p>
+        <h3 class="pain-title">Service quality varies across shifts</h3>
+        <p class="pain-desc">The morning team delivers in 8 minutes. The night team takes 25. Guests staying multiple nights notice. Inconsistency damages trust more than a single bad experience.</p>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- INTRO -->
-  <section id="intro">
-    <div class="intro-inner">
-      <div class="intro-left sr left">
-        <p class="label">Why Untu AI</p>
-        <h2>Intelligent automation built for hospitality.</h2>
-      </div>
-      <div class="intro-right sr right sr-d2">
-        <p>Hospitality is a human business — but not every task requires a human. Untu AI builds autonomous service robots that handle the repetitive, the logistical, and the routine, so your staff can focus on what truly matters: the guest relationship.</p>
-        <p>Our robots integrate seamlessly with your existing hotel management systems, operate across multiple floors via elevator integration, and deliver consistent, reliable service around the clock.</p>
-      </div>
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="solution-inner">
+    <div class="solution-left sr left">
+      <div class="gold-label">The Solution</div>
+      <h2>One robot.<br>Every delivery.<br><em>Always on time.</em></h2>
+      <p>The HotelBot H1 handles every delivery your guests request — room service, fresh towels, welcome kits, toiletries — autonomously. No scheduling. No overtime. No missed orders at 3am.</p>
+      <a href="#contact" class="btn-demo">Book a Demo →</a>
     </div>
-  </section>
-
-  <!-- PRODUCT -->
-  <section id="product">
-    <div class="product-header">
-      <div class="product-header-left sr">
-        <p class="label">Product</p>
-        <h2>HotelBot H1</h2>
-      </div>
-      <div class="product-header-right sr sr-d2">
-        <p>Our flagship autonomous service robot. Engineered for the demands of 24/7 hotel operations with multi-floor navigation, guest interaction, and HMS integration.</p>
-      </div>
-    </div>
-
-    <div class="product-body">
-      <div class="product-img-col sr left">
-        <div class="scan-line"></div>
-        <div class="product-img-placeholder">
-          <span class="pi-icon">🤖</span>
-          <span class="pi-label">Product Image</span>
+    <div class="solution-panel sr right sr-d2">
+      <div class="sol-item">
+        <div class="sol-check">
+          <svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <div class="product-sku"><span>UTH-001 · Autonomous Service Robot</span></div>
-      </div>
-
-      <div class="product-info-col sr right sr-d2">
-        <div class="product-name-row">
-          <p class="product-name">Untu HotelBot H1</p>
-          <p class="product-subtitle">Autonomous Service Robot · UTH-001</p>
-        </div>
-
-        <div class="specs-group">
-          <p class="specs-group-label">Technical Specifications</p>
-          <div class="spec-row"><span class="spec-key">Cabin Volume</span><span class="spec-val">45 L / layer</span></div>
-          <div class="spec-row"><span class="spec-key">Cabin Load</span><span class="spec-val">10 KG / layer</span></div>
-          <div class="spec-row"><span class="spec-key">Max Speed</span><span class="spec-val">0.8 m/s</span></div>
-          <div class="spec-row"><span class="spec-key">Battery Life</span><span class="spec-val">9 – 12 hours</span></div>
-          <div class="spec-row"><span class="spec-key">Passing Width</span><span class="spec-val">70 cm continuous curve</span></div>
-          <div class="spec-row"><span class="spec-key">Dimensions</span><span class="spec-val">500 × 500 × 1200 mm</span></div>
-          <div class="spec-row"><span class="spec-key">Warranty</span><span class="spec-val">1 year</span></div>
-        </div>
-
-        <ul class="features-list">
-          <li class="feat-item">
-            <span class="feat-num">01</span>
-            <span class="feat-text">SLAM & V-SLAM autonomous navigation — adapts to your floor plan with no permanent infrastructure changes required.</span>
-          </li>
-          <li class="feat-item">
-            <span class="feat-num">02</span>
-            <span class="feat-text">Native HMS integration and elevator control for seamless multi-floor delivery operations across the entire property.</span>
-          </li>
-          <li class="feat-item">
-            <span class="feat-num">03</span>
-            <span class="feat-text">Interactive touchscreen and voice interface for direct guest engagement, real-time status, and delivery confirmation.</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="services-header sr">
-      <p class="label">What We Offer</p>
-      <h2>End-to-end robotics for your hotel.</h2>
-    </div>
-    <div class="services-grid">
-      <div class="svc-card sr sr-d1">
-        <p class="svc-num">01</p>
-        <span class="svc-icon">🤖</span>
-        <h3 class="svc-title">Service Robots</h3>
-        <p class="svc-desc">Autonomous robots for room service delivery, luggage handling, and guest assistance — engineered to meet the standards of modern hospitality.</p>
-      </div>
-      <div class="svc-card sr sr-d2">
-        <p class="svc-num">02</p>
-        <span class="svc-icon">⚙️</span>
-        <h3 class="svc-title">System Integration</h3>
-        <p class="svc-desc">Deep integration with your Hotel Management System and elevator infrastructure. Your robot fleet runs as part of your operation, not apart from it.</p>
-      </div>
-      <div class="svc-card sr sr-d3">
-        <p class="svc-num">03</p>
-        <span class="svc-icon">🎓</span>
-        <h3 class="svc-title">On-site Training</h3>
-        <p class="svc-desc">Comprehensive training and ongoing support ensures your team is fully confident managing, operating, and maintaining the robotic fleet.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about-inner">
-      <div class="about-top">
-        <div class="about-top-left sr left">
-          <p class="label">About Us</p>
-          <h2>Pioneering intelligent automation for hospitality.</h2>
-        </div>
-        <div class="about-top-right sr right sr-d2">
-          <p class="about-mission">"To be the leading partner for the hospitality industry in the adoption of service automation — enhancing guest experiences and operational efficiency through state-of-the-art robotics."</p>
+        <div class="sol-text">
+          <h4>Eliminates unplanned staff diversions</h4>
+          <p>The robot handles every routine delivery autonomously. Your staff stays focused on guests, not logistics.</p>
         </div>
       </div>
-
-      <p class="label team-label sr">Founding Team</p>
-      <div class="team-grid">
-        <div class="team-card sr sr-d1">
-          <div class="avatar">👨‍💻</div>
-          <p class="team-name">Sudhir Yadav</p>
-          <p class="team-role">Co-Founder · Head of Technology</p>
-          <p class="team-bio">PhD in Robotics. Leads all engineering and AI development. Previously at TIH iHubDrishti and TCS Innovation Lab, with research experience at IIT Jodhpur and IIIT Hyderabad.</p>
+      <div class="sol-item">
+        <div class="sol-check">
+          <svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <div class="team-card sr sr-d2">
-          <div class="avatar">👨‍💼</div>
-          <p class="team-name">Shivam Srivastava</p>
-          <p class="team-role">Co-Founder · Head of Operations</p>
-          <p class="team-bio">Manages client integration, deployment logistics, and ongoing operational partnerships — ensuring every hotel transition to automation is seamless.</p>
+        <div class="sol-text">
+          <h4>Consistent sub-5-minute delivery windows</h4>
+          <p>The same delivery speed at 2pm and 2am. Guests get what they need before they start to wait.</p>
         </div>
-        <div class="team-card sr sr-d3">
-          <div class="avatar">📣</div>
-          <p class="team-name">Shivam Jaiswal</p>
-          <p class="team-role">Co-Founder · Head of Marketing</p>
-          <p class="team-bio">Leads growth strategy and hospitality sector partnerships, building relationships with hotel brands across the global market.</p>
+      </div>
+      <div class="sol-item">
+        <div class="sol-check">
+          <svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="sol-text">
+          <h4>Reduces delivery labor cost by up to 40%</h4>
+          <p>One robot covers the full delivery workload across every floor. The math is straightforward.</p>
+        </div>
+      </div>
+      <div class="sol-item">
+        <div class="sol-check">
+          <svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="#c8a84b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="sol-text">
+          <h4>Same performance across every shift, every night</h4>
+          <p>No fatigue. No shift variation. No staffing gaps. The HotelBot H1 performs identically at all hours.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- TESTIMONIALS -->
-  <section id="testimonials">
-    <div class="testi-header sr">
-      <p class="label">Client Stories</p>
-      <h2>What our hotel partners say.</h2>
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-inner">
+    <div class="how-header sr">
+      <div class="gold-label">Deployment</div>
+      <h2>Deploy in days.<br>Deliver forever.</h2>
     </div>
-    <div class="testi-grid">
-      <div class="testi-card sr sr-d1">
-        <div class="testi-q-mark">"</div>
-        <p class="testi-quote">The service robots from Untu AI have revolutionized our room service operations. Guests are consistently delighted and our staff now focus on meaningful guest interactions rather than logistics.</p>
-        <p class="testi-author">General Manager · Luxury Hotel</p>
+    <div class="how-steps">
+      <div class="how-step sr sr-d1">
+        <div class="step-num-wrap">
+          <div class="step-num">01</div>
+        </div>
+        <h3 class="step-title">Map &amp; Configure</h3>
+        <p class="step-desc">Our team maps your property using SLAM. No floor modifications, no infrastructure installs. Typically completed in one day.</p>
       </div>
-      <div class="testi-card sr sr-d2">
-        <div class="testi-q-mark">"</div>
-        <p class="testi-quote">Integration was seamless from day one. Their team provided exceptional technical support and the system works flawlessly within our existing hotel infrastructure and HMS.</p>
-        <p class="testi-author">Director of Operations · Hotel Group</p>
+      <div class="how-step sr sr-d2">
+        <div class="step-num-wrap">
+          <div class="step-num">02</div>
+        </div>
+        <h3 class="step-title">Integrate HMS</h3>
+        <p class="step-desc">We connect the HotelBot H1 to your existing hotel management system and elevator controls. Works with Oracle, Agilysys, Mews, and more.</p>
       </div>
-      <div class="testi-card sr sr-d3">
-        <div class="testi-q-mark">"</div>
-        <p class="testi-quote">Our guests love the experience. The robots have become a signature feature of our property — guests actively mention them in reviews and social posts.</p>
-        <p class="testi-author">Owner · Boutique Hotel</p>
+      <div class="how-step sr sr-d3">
+        <div class="step-num-wrap">
+          <div class="step-num">03</div>
+        </div>
+        <h3 class="step-title">Go Live</h3>
+        <p class="step-desc">Staff training, test runs, and a live deployment review. Your first autonomous delivery typically happens on day three.</p>
+      </div>
+      <div class="how-step sr sr-d4">
+        <div class="step-num-wrap">
+          <div class="step-num">04</div>
+        </div>
+        <h3 class="step-title">Optimize</h3>
+        <p class="step-desc">We monitor performance, refine delivery routes, and push software updates remotely. Ongoing support included in your agreement.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="contact-inner">
-      <div class="contact-left sr left">
-        <p class="label">Get In Touch</p>
-        <h2>Let's talk about your property.</h2>
-        <p>Whether you're exploring automation for the first time or ready to deploy, we'd love to understand your operation and show you what's possible.</p>
-        <div class="contact-details">
-          <div class="cd-row">
-            <span class="cd-key">Address</span>
-            <span class="cd-val">C 2002, Flora Heritage, Greater Noida — 201306, India</span>
+<!-- FEATURES -->
+<section id="features">
+  <div class="features-header sr">
+    <div class="gold-label">Capabilities</div>
+    <h2>Built for the demands of real hotel operations.</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card sr sr-d1">
+      <div class="feat-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="10" r="3"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3"/><path d="M4.2 4.2l2.1 2.1M13.7 13.7l2.1 2.1M4.2 15.8l2.1-2.1M13.7 6.3l2.1-2.1"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">Autonomous SLAM Navigation</h3>
+      <p class="feat-desc">Self-mapping and self-locating. The robot builds and updates its own floor plan in real time — no QR codes, no magnetic strips, no permanent markings.</p>
+    </div>
+    <div class="feat-card sr sr-d2">
+      <div class="feat-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2L2 7v6l8 5 8-5V7L10 2z"/><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">360° Obstacle Avoidance</h3>
+      <p class="feat-desc">Multi-layer sensors detect guests, luggage carts, and open doors. The robot reroutes in real time — never stops, never gets confused.</p>
+    </div>
+    <div class="feat-card sr sr-d3">
+      <div class="feat-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="14" height="12" rx="1"/><path d="M7 4V2M13 4V2"/><path d="M3 9h14"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">Multi-Floor + Elevator Integration</h3>
+      <p class="feat-desc">Calls and rides the elevator independently. Delivers to any floor of your property without human assistance at any point in the journey.</p>
+    </div>
+    <div class="feat-card sr sr-d4">
+      <div class="feat-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">24/7 Operation</h3>
+      <p class="feat-desc">9–12 hour battery life with automatic return to charging dock. The robot is ready for the next delivery before your staff clock in for the morning shift.</p>
+    </div>
+    <div class="feat-card sr sr-d5">
+      <div class="feat-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h12a1 1 0 011 1v8a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M7 16h6"/><path d="M10 14v2"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">Guest Notifications</h3>
+      <p class="feat-desc">Guests receive real-time SMS or in-app updates on delivery status. The robot knocks, announces arrival, and waits — just like a well-trained team member.</p>
+    </div>
+    <div class="feat-card sr sr-d6">
+      <div class="feat-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="16" height="14" rx="1"/><path d="M7 7h6M7 10h6M7 13h4"/>
+        </svg>
+      </div>
+      <h3 class="feat-title">HMS Integration</h3>
+      <p class="feat-desc">Reads orders directly from your hotel management system. No separate app, no manual handoffs — delivery triggers automatically when an order is placed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section id="roi">
+  <div class="roi-inner">
+    <div class="roi-header sr">
+      <div class="gold-label">Business Outcomes</div>
+      <h2>The numbers that matter to your operation.</h2>
+    </div>
+    <div class="roi-tiles">
+      <div class="roi-tile sr sr-d1">
+        <div class="roi-num">40%</div>
+        <div class="roi-label">Reduction in delivery labor costs within the first 90 days</div>
+      </div>
+      <div class="roi-tile sr sr-d2">
+        <div class="roi-num">&lt;5 min</div>
+        <div class="roi-label">Average time from order placed to item at the guest's door</div>
+      </div>
+      <div class="roi-tile sr sr-d3">
+        <div class="roi-num">98%</div>
+        <div class="roi-label">On-time delivery rate across all hours and all floors</div>
+      </div>
+      <div class="roi-tile sr sr-d4">
+        <div class="roi-num">3×</div>
+        <div class="roi-label">Faster late-night response vs. traditional staffed delivery</div>
+      </div>
+    </div>
+    <div class="roi-body">
+      <div class="roi-copy sr left">
+        <h3>What this means for your property's bottom line</h3>
+        <p>Hotels that deploy the HotelBot H1 typically recover the investment within 14–18 months purely through labor savings — before factoring in improved guest satisfaction scores and the incremental revenue that follows. For a 150-room property running 24/7 operations, the math is compelling from month one.</p>
+      </div>
+      <div class="roi-outcomes sr right sr-d2">
+        <div class="roi-outcome">
+          <div class="roi-outcome-icon">
+            <svg viewBox="0 0 14 14" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round"><polyline points="2,7 5,10 12,4"/></svg>
           </div>
-          <div class="cd-row">
-            <span class="cd-key">Email</span>
-            <span class="cd-val"><a href="mailto:contact@untuai.com">contact@untuai.com</a></span>
+          <div class="roi-outcome-text"><strong>Staff redirected to revenue-generating roles</strong> — front desk, concierge, and guest experience work that directly drives loyalty.</div>
+        </div>
+        <div class="roi-outcome">
+          <div class="roi-outcome-icon">
+            <svg viewBox="0 0 14 14" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round"><polyline points="2,7 5,10 12,4"/></svg>
           </div>
-          <div class="cd-row">
-            <span class="cd-key">Phone</span>
-            <span class="cd-val"><a href="tel:+918860112611">+91 88601 12611</a></span>
+          <div class="roi-outcome-text"><strong>Higher review scores on delivery speed</strong> — the category guests cite most after room cleanliness.</div>
+        </div>
+        <div class="roi-outcome">
+          <div class="roi-outcome-icon">
+            <svg viewBox="0 0 14 14" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round"><polyline points="2,7 5,10 12,4"/></svg>
           </div>
-          <div class="cd-row">
-            <span class="cd-key">Web</span>
-            <span class="cd-val"><a href="http://www.untuai.com">www.untuai.com</a></span>
+          <div class="roi-outcome-text"><strong>No overnight delivery staffing required</strong> — cover late-night requests with zero additional headcount.</div>
+        </div>
+        <div class="roi-outcome">
+          <div class="roi-outcome-icon">
+            <svg viewBox="0 0 14 14" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round"><polyline points="2,7 5,10 12,4"/></svg>
           </div>
+          <div class="roi-outcome-text"><strong>A differentiating amenity guests actively mention</strong> in reviews, generating organic attention for your property.</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="contact-form sr right sr-d2">
-        <form action="#" method="POST">
-          <div class="form-field">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Your name" required>
+<!-- USE CASES -->
+<section id="usecases">
+  <div class="usecases-header">
+    <div>
+      <div class="gold-label sr">Delivery Types</div>
+      <h2 class="sr sr-d1">Everything your guests<br>need, delivered.</h2>
+    </div>
+    <p class="sr sr-d2">The HotelBot H1 handles every type of in-hotel delivery — fully autonomously, any time of day or night.</p>
+  </div>
+  <div class="usecases-grid">
+    <div class="uc-card sr sr-d1">
+      <div class="uc-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 8h20v14a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"/><path d="M4 8l2-5h16l2 5"/><path d="M14 12v8M10 16h8"/>
+        </svg>
+      </div>
+      <h3 class="uc-title">Room Service</h3>
+      <p class="uc-desc">Hot or cold, ordered through your HMS — the robot collects and delivers without a single call to the front desk.</p>
+    </div>
+    <div class="uc-card sr sr-d2">
+      <div class="uc-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="10" width="18" height="14" rx="1"/><path d="M9 10V7a5 5 0 0110 0v3"/>
+        </svg>
+      </div>
+      <h3 class="uc-title">Fresh Towels &amp; Linens</h3>
+      <p class="uc-desc">The most requested late-night delivery. Handled in under 5 minutes without pulling staff from other duties.</p>
+    </div>
+    <div class="uc-card sr sr-d3">
+      <div class="uc-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="14" cy="10" rx="7" ry="5"/><path d="M7 10v8c0 2.76 3.13 5 7 5s7-2.24 7-5v-8"/>
+        </svg>
+      </div>
+      <h3 class="uc-title">Toiletries &amp; Amenities</h3>
+      <p class="uc-desc">Shampoo, razors, toothbrushes, charging cables — delivered directly in minutes, tracked through inventory.</p>
+    </div>
+    <div class="uc-card sr sr-d4">
+      <div class="uc-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 7h18l-2 14H7L5 7z"/><path d="M10 7V5a2 2 0 014 0v2"/>
+        </svg>
+      </div>
+      <h3 class="uc-title">Welcome Kits</h3>
+      <p class="uc-desc">Branded arrival packages delivered to the room before check-in, ready the moment guests open their door.</p>
+    </div>
+    <div class="uc-card sr sr-d5">
+      <div class="uc-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="14" cy="14" r="10"/><path d="M14 8v6l4 4"/>
+        </svg>
+      </div>
+      <h3 class="uc-title">Late-Night Requests</h3>
+      <p class="uc-desc">The shift your competitors dread is where the HotelBot H1 performs best. Consistent, fast, and fully autonomous after midnight.</p>
+    </div>
+    <div class="uc-card sr sr-d6">
+      <div class="uc-icon">
+        <svg viewBox="0 0 28 28" fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 4l2.5 5.5 6 .5-4.5 4 1.5 6L14 17l-5.5 3 1.5-6-4.5-4 6-.5L14 4z"/>
+        </svg>
+      </div>
+      <h3 class="uc-title">Concierge Items</h3>
+      <p class="uc-desc">Umbrellas, local guides, event tickets, phone chargers — anything your concierge team can prepare, the robot can deliver.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT SHOWCASE -->
+<section id="product">
+  <div class="product-header sr">
+    <div class="gold-label">The Robot</div>
+    <h2>Meet the <em>HotelBot H1.</em></h2>
+  </div>
+  <div class="product-body">
+    <div class="product-img-col sr left">
+      <div class="scan-line"></div>
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+      <!-- CSS Robot Silhouette -->
+      <div class="robot-silhouette">
+        <div class="robot-body">
+          <div class="robot-head"></div>
+          <div class="robot-neck"></div>
+          <div class="robot-torso">
+            <div class="robot-shelf"></div>
+            <div class="robot-shelf"></div>
+            <div class="robot-panel"></div>
+            <div class="robot-display"></div>
           </div>
-          <div class="form-field">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="your@email.com" required>
-          </div>
-          <div class="form-field">
-            <label for="hotel">Hotel / Company</label>
-            <input type="text" id="hotel" name="hotel" placeholder="Your hotel or company">
-          </div>
-          <div class="form-field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="Tell us about your property and what you're looking for…" required></textarea>
-          </div>
-          <button type="submit" class="form-submit">Send Message</button>
-        </form>
+          <div class="robot-base"></div>
+          <div class="robot-glow"></div>
+        </div>
+      </div>
+      <div class="product-sku"><span>UTH-001 · HotelBot H1 · Autonomous Service Robot</span></div>
+    </div>
+    <div class="product-info-col sr right sr-d2">
+      <div class="product-name-row">
+        <p class="product-name">Untu HotelBot H1</p>
+        <p class="product-subtitle">Autonomous Delivery Robot · Model UTH-001</p>
+      </div>
+      <div class="specs-group">
+        <p class="specs-group-label">Technical Specifications</p>
+        <div class="spec-row"><span class="spec-key">Cabin Volume</span><span class="spec-val">45 L / layer</span></div>
+        <div class="spec-row"><span class="spec-key">Cabin Load</span><span class="spec-val">10 KG / layer</span></div>
+        <div class="spec-row"><span class="spec-key">Max Speed</span><span class="spec-val">0.8 m/s</span></div>
+        <div class="spec-row"><span class="spec-key">Battery Life</span><span class="spec-val">9 – 12 hours</span></div>
+        <div class="spec-row"><span class="spec-key">Passing Width</span><span class="spec-val">70 cm continuous curve</span></div>
+        <div class="spec-row"><span class="spec-key">Dimensions</span><span class="spec-val">500 × 500 × 1200 mm</span></div>
+        <div class="spec-row"><span class="spec-key">Warranty</span><span class="spec-val">1 year</span></div>
+      </div>
+      <div class="product-caps">
+        <div class="cap-row">
+          <span class="cap-num">01</span>
+          <span class="cap-text">SLAM &amp; V-SLAM autonomous navigation — maps your floor plan on first deployment, updates continuously. No permanent infrastructure changes required.</span>
+        </div>
+        <div class="cap-row">
+          <span class="cap-num">02</span>
+          <span class="cap-text">Native HMS integration and independent elevator control for seamless multi-floor delivery across the entire property without any human handoff.</span>
+        </div>
+        <div class="cap-row">
+          <span class="cap-num">03</span>
+          <span class="cap-text">Interactive touchscreen and voice interface for direct guest engagement, real-time delivery status, and secure cabin release upon arrival.</span>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-top">
-      <div class="footer-brand">
-        <img src="images/logo.png" alt="Untu AI" style="height:32px;width:auto;filter:brightness(0) invert(1);opacity:0.85;margin-bottom:14px;">
-        <p>Autonomous service robots for the hospitality industry. Greater Noida, India.</p>
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testi-header sr">
+    <div class="gold-label">Client Stories</div>
+    <h2>What operators say after the first month.</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card sr sr-d1">
+      <div class="testi-q-mark">"</div>
+      <p class="testi-quote">Within two weeks of deployment, our late-night complaint rate dropped to near zero. Guests who used to wait 30 minutes for towels now have them in under 5. The robot pays for itself in staff hours alone.</p>
+      <div class="testi-divider"></div>
+      <p class="testi-author">General Manager</p>
+      <p class="testi-hotel">5-Star Business Hotel, NCR</p>
+    </div>
+    <div class="testi-card sr sr-d2">
+      <div class="testi-q-mark">"</div>
+      <p class="testi-quote">The integration took three days and the Untu team handled everything. We didn't change a single thing in our HMS or building. It just worked — and it keeps working, every shift, every night.</p>
+      <div class="testi-divider"></div>
+      <p class="testi-author">Director of Operations</p>
+      <p class="testi-hotel">200-Room Branded Hotel Group</p>
+    </div>
+    <div class="testi-card sr sr-d3">
+      <div class="testi-q-mark">"</div>
+      <p class="testi-quote">Our guests post about it on social media. It's become a feature of the property that differentiates us from every competitor in the area. Occupancy is up and so is the review average — both changed after the robot arrived.</p>
+      <div class="testi-divider"></div>
+      <p class="testi-author">Owner</p>
+      <p class="testi-hotel">Boutique Luxury Property, Bengaluru</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-inner">
+    <div class="faq-header sr">
+      <div class="gold-label">FAQ</div>
+      <h2>Common questions before the demo.</h2>
+    </div>
+    <div class="faq-list sr sr-d1">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">What HMS systems do you integrate with?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">We integrate with Oracle OPERA, Agilysys, Mews, Cloudbeds, and most major HMS platforms via API. If you use a less common system, we evaluate compatibility during the pre-deployment assessment. In most cases, custom integrations take 2–5 additional days.</div></div>
       </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="#product">Product</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">How long does the full deployment take?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Standard deployment for a property up to 200 rooms takes 3–5 days: one day for mapping and configuration, one day for HMS and elevator integration, and one day for staff training and supervised live operation. Larger properties or multi-wing layouts may require an additional 1–2 days.</div></div>
       </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="mailto:contact@untuai.com">contact@untuai.com</a></li>
-          <li><a href="mailto:info@untuai.com">info@untuai.com</a></li>
-          <li><a href="tel:+918860112611">+91 88601 12611</a></li>
-        </ul>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Do we need to modify our building or install any infrastructure?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">No. The HotelBot H1 uses SLAM navigation, which means it maps your existing environment without any floor markings, QR codes, magnetic strips, or physical modifications. The only installation requirement is a charging dock placement — roughly the footprint of a nightstand.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">What happens if the robot gets stuck or encounters an unexpected obstacle?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">The robot will attempt to reroute up to three times. If it cannot complete the delivery, it sends an alert to your front desk dashboard with its exact location and the delivery status. A staff member can then complete the delivery or remotely clear the path. This fallback scenario occurs in less than 0.5% of all deliveries in practice.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Can it use our existing elevators?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Yes. We integrate with elevator control systems from Otis, Schindler, KONE, Mitsubishi, and most commercially installed platforms. The robot calls the elevator, boards independently, selects the floor, and exits without any human assistance. For elevators without digital API access, we offer a retrofit control module.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">What's the pricing model?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">We offer both purchase and RaaS (Robotics as a Service) monthly subscription options. Pricing depends on the number of robots, property size, and integration complexity. We discuss this during the demo — there's no standardised pricing page because every property is sized differently. Most hotels find the investment is recovered within 14–18 months.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Is there ongoing support after deployment?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Yes. All agreements include remote monitoring, software updates, and a dedicated support contact. We proactively alert you if performance metrics drop below threshold and push navigation and software improvements remotely. On-site support visits for hardware issues are typically resolved within 24–48 hours across our service zones.</div></div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Untu AI Pvt. Ltd. All rights reserved.</p>
-      <div class="footer-socials">
-        <a href="https://linkedin.com/company/untuai" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://x.com/untuai" target="_blank" rel="noopener">X (Twitter)</a>
-        <a href="https://youtube.com/@untuai" target="_blank" rel="noopener">YouTube</a>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="cta-final">
+  <div class="cta-final-inner">
+    <div class="gold-label sr">Get Started</div>
+    <h2 class="sr sr-d1">Ready to eliminate<br><em>delivery delays?</em></h2>
+    <p class="sr sr-d2">Join hotels already running 24/7 autonomous delivery. Book a 30-minute demo and see the HotelBot H1 in operation at a property near you.</p>
+    <div class="cta-final-actions sr sr-d3">
+      <a href="#contact" class="btn-gold">Book a Demo</a>
+      <a href="#product" class="btn-ghost">Download Spec Sheet →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-left sr left">
+      <div class="gold-label">Get In Touch</div>
+      <h2>Let's talk about your property.</h2>
+      <p>Whether you're exploring automation for the first time or ready to move forward, we'll walk you through exactly what deployment looks like for your specific property.</p>
+      <div class="contact-details">
+        <div class="cd-row">
+          <span class="cd-key">Address</span>
+          <span class="cd-val">C 2002, Flora Heritage, Greater Noida — 201306, India</span>
+        </div>
+        <div class="cd-row">
+          <span class="cd-key">Email</span>
+          <span class="cd-val"><a href="mailto:contact@untuai.com">contact@untuai.com</a></span>
+        </div>
+        <div class="cd-row">
+          <span class="cd-key">Phone</span>
+          <span class="cd-val"><a href="tel:+918860112611">+91 88601 12611</a></span>
+        </div>
+        <div class="cd-row">
+          <span class="cd-key">Web</span>
+          <span class="cd-val"><a href="http://www.untuai.com">www.untuai.com</a></span>
+        </div>
       </div>
     </div>
-  </footer>
+    <div class="sr right sr-d2">
+      <form action="#" method="POST">
+        <div class="form-field">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-field">
+          <label for="email">Work Email</label>
+          <input type="email" id="email" name="email" placeholder="you@yourhotel.com" required>
+        </div>
+        <div class="form-field">
+          <label for="hotel">Hotel / Group Name</label>
+          <input type="text" id="hotel" name="hotel" placeholder="Your property or hotel group">
+        </div>
+        <div class="form-field">
+          <label for="rooms">Number of Rooms</label>
+          <input type="text" id="rooms" name="rooms" placeholder="e.g. 120">
+        </div>
+        <div class="form-field">
+          <label for="message">What are you looking to solve?</label>
+          <textarea id="message" name="message" placeholder="Tell us about your current delivery process and what you'd like to change…" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Book a Demo →</button>
+      </form>
+    </div>
+  </div>
+</section>
 
-  <script>
-    /* nav fill on scroll */
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('filled', window.scrollY > 20);
-    }, { passive: true });
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="images/logo.png" alt="Untu AI">
+      <p>Autonomous delivery robots for the hospitality industry. Designed, built, and supported from Greater Noida, India.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#product">HotelBot H1</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#roi">ROI</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#usecases">Use Cases</a></li>
+        <li><a href="#testimonials">Clients</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:contact@untuai.com">contact@untuai.com</a></li>
+        <li><a href="tel:+918860112611">+91 88601 12611</a></li>
+        <li><a href="#contact">Book a Demo</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 Untu AI Pvt. Ltd. All rights reserved.</p>
+    <div class="footer-socials">
+      <a href="https://linkedin.com/company/untuai" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/untuai" target="_blank" rel="noopener">X</a>
+      <a href="https://youtube.com/@untuai" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </div>
+</footer>
 
-    /* hamburger */
-    const hb = document.getElementById('hamburger');
-    const nl = document.getElementById('nav-links');
-    hb.addEventListener('click', () => {
-      hb.classList.toggle('open');
-      nl.classList.toggle('open');
+<script>
+  /* nav fill on scroll */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('filled', window.scrollY > 20);
+  }, { passive: true });
+
+  /* hamburger */
+  const hb = document.getElementById('hamburger');
+  const nl = document.getElementById('nav-links');
+  hb.addEventListener('click', () => {
+    hb.classList.toggle('open');
+    nl.classList.toggle('open');
+  });
+  nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    hb.classList.remove('open');
+    nl.classList.remove('open');
+  }));
+
+  /* scroll reveal */
+  const srEls = document.querySelectorAll('.sr');
+  const srObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); srObs.unobserve(e.target); }
     });
-    nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      hb.classList.remove('open');
-      nl.classList.remove('open');
-    }));
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  srEls.forEach(el => srObs.observe(el));
 
-    /* scroll reveal */
-    const srEls = document.querySelectorAll('.sr');
-    const srObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); srObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
-    srEls.forEach(el => srObs.observe(el));
+  /* count-up */
+  function countUp(el, target, duration = 1800) {
+    const start = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(ease * target);
+      el.textContent = val >= 10000 ? (val / 1000).toFixed(0) + ',000' : val;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+  const cObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const t = parseInt(e.target.dataset.count, 10);
+        if (!isNaN(t)) countUp(e.target, t);
+        cObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
 
-    /* count-up animation */
-    function countUp(el, target, duration = 1800) {
-      const start = performance.now();
-      const tick = (now) => {
-        const p = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        const val = Math.round(ease * target);
-        el.textContent = val >= 10000 ? (val/1000).toFixed(0) + ',000' : val;
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    }
-    const cObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          const t = parseInt(e.target.dataset.count, 10);
-          if (!isNaN(t)) countUp(e.target, t);
-          cObs.unobserve(e.target);
-        }
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
       });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
-  </script>
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
 </body>
 </html>
